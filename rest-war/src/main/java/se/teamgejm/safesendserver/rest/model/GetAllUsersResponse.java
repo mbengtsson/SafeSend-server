@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
  */
-public class GetAllUsersRestResponse {
+public class GetAllUsersResponse {
 
 	private List<UserItem> users;
 
-	public GetAllUsersRestResponse(List<UserItem> users) {
+	public GetAllUsersResponse(List<UserItem> users) {
 		this.users = users;
 	}
 
