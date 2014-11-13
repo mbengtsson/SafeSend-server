@@ -3,12 +3,14 @@ package se.teamgejm.safesendserver.dao.jpa;
 import se.teamgejm.safesendserver.dao.LogDao;
 import se.teamgejm.safesendserver.domain.LogEntry;
 
+import javax.ejb.Stateless;
 import javax.persistence.Query;
 import java.util.Collection;
 
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
  */
+@Stateless
 public class JpaLogDao extends JpaBaseDao<LogEntry> implements LogDao {
 
 	@SuppressWarnings("unchecked")

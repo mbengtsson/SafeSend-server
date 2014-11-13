@@ -28,9 +28,11 @@ public class LogEntry implements IdHolder {
 	private long targetId;
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private ObjectType objectType;
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private Verb verb;
 
 	@NotNull
