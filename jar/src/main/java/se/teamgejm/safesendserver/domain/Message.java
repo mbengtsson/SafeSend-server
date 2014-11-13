@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
-public class Message implements IdHolder {
+@NamedQuery(name = "getMessagesByReciever", query = "select m from Message m where m.reciever = :receiver")
+public class Message implements IdHolder, Comparable<Message> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class Message implements IdHolder {
 
 	@NotNull
 	@ManyToOne
-	private User reiever;
+	private User reciever;
 
 	@NotNull
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -36,10 +37,10 @@ public class Message implements IdHolder {
 	public Message() {
 	}
 
-	public Message(String message, User sender, User reiever, DateTime timeStamp) {
+	public Message(String message, User sender, User reciever, DateTime timeStamp) {
 		this.message = message;
 		this.sender = sender;
-		this.reiever = reiever;
+		this.reciever = reciever;
 		this.timeStamp = timeStamp;
 	}
 
@@ -67,12 +68,12 @@ public class Message implements IdHolder {
 		this.sender = sender;
 	}
 
-	public User getReiever() {
-		return reiever;
+	public User getReciever() {
+		return reciever;
 	}
 
-	public void setReiever(User reiever) {
-		this.reiever = reiever;
+	public void setReciever(User reiever) {
+		this.reciever = reiever;
 	}
 
 	public DateTime getTimeStamp() {
@@ -89,9 +90,14 @@ public class Message implements IdHolder {
 				"id=" + id +
 				", message='" + message + '\'' +
 				", sender=" + sender +
-				", reiever=" + reiever +
+				", reiever=" + reciever +
 				", timeStamp=" + timeStamp +
 				'}';
+	}
+
+	@Override
+	public int compareTo(Message o) {
+		return timeStamp.compareTo(o.getTimeStamp());
 	}
 
 	@Override
@@ -111,7 +117,7 @@ public class Message implements IdHolder {
 		if (!message.equals(message1.message)) {
 			return false;
 		}
-		if (!reiever.equals(message1.reiever)) {
+		if (!reciever.equals(message1.reciever)) {
 			return false;
 		}
 		if (!sender.equals(message1.sender)) {
@@ -129,7 +135,7 @@ public class Message implements IdHolder {
 		int result = (int) (id ^ (id >>> 32));
 		result = 31 * result + message.hashCode();
 		result = 31 * result + sender.hashCode();
-		result = 31 * result + reiever.hashCode();
+		result = 31 * result + reciever.hashCode();
 		result = 31 * result + timeStamp.hashCode();
 		return result;
 	}
