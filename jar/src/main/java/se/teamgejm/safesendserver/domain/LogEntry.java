@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 		@NamedQuery(name = "getLogEntrysByTargetID", query = "select l from LogEntry l where l.targetId = :targetId"),
 		@NamedQuery(name = "getLogEntrysByObjectType", query = "select l from LogEntry l where l.objectType = :objectType"),
 		@NamedQuery(name = "getLogEntrysByVerb", query = "select l from LogEntry l where l.verb = :verb")})
-public class LogEntry implements IdHolder {
+public class LogEntry implements IdHolder, Comparable<LogEntry> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -108,6 +108,11 @@ public class LogEntry implements IdHolder {
 				", verb=" + verb +
 				", timeStamp=" + timeStamp +
 				'}';
+	}
+
+	@Override
+	public int compareTo(LogEntry o) {
+		return timeStamp.compareTo(o.getTimeStamp());
 	}
 
 	@Override
