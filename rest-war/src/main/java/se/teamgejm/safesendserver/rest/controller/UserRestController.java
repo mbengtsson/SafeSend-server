@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.teamgejm.safesendserver.domain.User;
-import se.teamgejm.safesendserver.rest.model.GetAllUsersResponse;
-import se.teamgejm.safesendserver.rest.model.GetPublicKeyResponse;
+import se.teamgejm.safesendserver.rest.model.response.GetAllUsersResponse;
+import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ public class UserRestController {
 	@Inject
 	UserService userService;
 
-	@RequestMapping(value = "/getAllUsers", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<GetAllUsersResponse> getAllUsers() {
 
 		List<GetAllUsersResponse.UserItem> userList = new ArrayList<GetAllUsersResponse.UserItem>();
@@ -36,7 +36,7 @@ public class UserRestController {
 		return new ResponseEntity<GetAllUsersResponse>(new GetAllUsersResponse(userList), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getPublicKey/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<GetPublicKeyResponse> getPublicKey(@PathVariable long id) {
 
 		User user = userService.getUser(id);

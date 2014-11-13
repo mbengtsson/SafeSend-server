@@ -24,4 +24,8 @@
 	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultUserService"
 	                business-interface="se.teamgejm.safesendserver.service.UserService"/>
 
+	<jee:local-slsb id="messageService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultMessageService"
+	                business-interface="se.teamgejm.safesendserver.service.MessageService"/>
+
 </beans>

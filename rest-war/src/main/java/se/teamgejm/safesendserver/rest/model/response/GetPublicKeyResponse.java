@@ -1,4 +1,4 @@
-package se.teamgejm.safesendserver.rest.model;
+package se.teamgejm.safesendserver.rest.model.response;
 
 /**
  * Created by Marcus Bengtsson on 2014-11-13.

@@ -4,12 +4,14 @@ import se.teamgejm.safesendserver.dao.MessageDao;
 import se.teamgejm.safesendserver.domain.Message;
 import se.teamgejm.safesendserver.domain.User;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.Collection;
 
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
  */
+@Stateless
 public class DefaultMessageService implements MessageService {
 
 	@Inject

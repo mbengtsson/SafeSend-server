@@ -1,4 +1,4 @@
-package se.teamgejm.safesendserver.rest.model;
+package se.teamgejm.safesendserver.rest.model.response;
 
 import java.util.List;
 
