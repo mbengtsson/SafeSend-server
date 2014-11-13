@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.Message;
 import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.rest.model.request.ReceiveMessageRequest;
 import se.teamgejm.safesendserver.rest.model.request.SendMessageRequest;
+import se.teamgejm.safesendserver.rest.model.response.ReceiveMessageResponse;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.MessageService;
 import se.teamgejm.safesendserver.service.UserService;
@@ -54,5 +56,32 @@ public class MessageRestController {
 				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.SEND, DateTime.now()));
 
 		return new ResponseEntity<String>("", HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/message/receive", method = RequestMethod.POST, consumes = "application/json",
+			produces = "application/json")
+	public ResponseEntity<ReceiveMessageResponse> receiveMessage(@RequestBody ReceiveMessageRequest request) {
+
+		if (request == null) {
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		Message message = messageService.getMessage(request.getMessageId());
+
+		if (message == null) {
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		User sender = message.getSender();
+
+		messageService.removeMessage(message);
+
+		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
+				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
+
+		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender.getId(),
+				sender.getPublicKey(), message.getMessage()), HttpStatus.OK);
 	}
 }

@@ -31,7 +31,7 @@ public abstract class JpaBaseDao<E extends IdHolder> implements BaseDao<E> {
 
 	@Override
 	public void remove(E entity) {
-		em.remove(entity);
+		em.remove(em.getReference(entityClass, entity.getId()));
 	}
 
 	@Override
