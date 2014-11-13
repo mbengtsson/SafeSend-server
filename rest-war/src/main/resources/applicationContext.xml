@@ -20,4 +20,8 @@
 	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultLogService"
 	                business-interface="se.teamgejm.safesendserver.service.LogService"/>
 
+	<jee:local-slsb id="userService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultUserService"
+	                business-interface="se.teamgejm.safesendserver.service.UserService"/>
+
 </beans>

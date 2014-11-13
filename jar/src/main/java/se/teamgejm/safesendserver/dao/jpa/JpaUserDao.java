@@ -14,6 +14,6 @@ public class JpaUserDao extends JpaBaseDao<User> implements UserDao {
 
 	@Override
 	public Collection<User> getAllUsers() {
-		return em.createQuery("select u from LogEntry u").getResultList();
+		return em.createQuery("select u from User u").getResultList();
 	}
 }
