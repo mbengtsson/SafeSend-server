@@ -3,13 +3,13 @@ package se.teamgejm.safesendserver.rest.model.response;
 /**
  * Created by Marcus Bengtsson on 2014-11-14.
  */
-public class UserResponseItem {
+public class GetUserResponse {
 
 	private long id;
 
 	private String username;
 
-	public UserResponseItem(long id, String username) {
+	public GetUserResponse(long id, String username) {
 		this.id = id;
 		this.username = username;
 	}

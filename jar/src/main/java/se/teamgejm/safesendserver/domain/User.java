@@ -91,12 +91,6 @@ public class User implements IdHolder, Comparable<User> {
 
 		User user = (User) o;
 
-		if (!password.equals(user.password)) {
-			return false;
-		}
-		if (!publicKey.equals(user.publicKey)) {
-			return false;
-		}
 		if (!username.equals(user.username)) {
 			return false;
 		}
@@ -106,9 +100,6 @@ public class User implements IdHolder, Comparable<User> {
 
 	@Override
 	public int hashCode() {
-		int result = username.hashCode();
-		result = 31 * result + password.hashCode();
-		result = 31 * result + publicKey.hashCode();
-		return result;
+		return username.hashCode();
 	}
 }
