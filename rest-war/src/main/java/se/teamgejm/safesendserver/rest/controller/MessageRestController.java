@@ -3,21 +3,21 @@ package se.teamgejm.safesendserver.rest.controller;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.Message;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.ReceiveMessageRequest;
 import se.teamgejm.safesendserver.rest.model.request.SendMessageRequest;
+import se.teamgejm.safesendserver.rest.model.response.NewMessagesResponseItem;
 import se.teamgejm.safesendserver.rest.model.response.ReceiveMessageResponse;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.MessageService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
@@ -83,5 +83,24 @@ public class MessageRestController {
 
 		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender.getId(),
 				sender.getPublicKey(), message.getMessage()), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/message/{id}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<List<NewMessagesResponseItem>> newMessages(@PathVariable long id) {
+
+		List<NewMessagesResponseItem> newMessages = new ArrayList<NewMessagesResponseItem>();
+		User receiver = userService.getUser(id);
+
+		if (receiver == null) {
+			return new ResponseEntity<List<NewMessagesResponseItem>>(newMessages, HttpStatus.NOT_FOUND);
+		}
+
+		for (Message message : messageService.getMessagesByReciever(receiver)) {
+			newMessages.add(new NewMessagesResponseItem(message.getId(), message.getSender().getId(),
+					message.getSender().getUsername()));
+		}
+
+		return new ResponseEntity<List<NewMessagesResponseItem>>(newMessages, HttpStatus.OK);
+
 	}
 }
