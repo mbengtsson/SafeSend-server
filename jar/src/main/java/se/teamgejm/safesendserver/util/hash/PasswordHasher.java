@@ -8,6 +8,9 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 /**
+ * Class used to create salted PBKDF2 hashes of passwords and to validate them.
+ * The password-validation compares the password hashes in length-constant time to prevent timing attacks
+ * <p/>
  * Created by Marcus Bengtsson on 2014-11-14.
  */
 public class PasswordHasher {
@@ -20,10 +23,10 @@ public class PasswordHasher {
 	private static final int HASH_BITS = 512;
 
 	/**
-	 * Returns 
+	 * Returns salted hash of the password
 	 *
 	 * @param password
-	 * @return
+	 * @return salted hash of the password
 	 */
 	public String getPasswordHash(String password) {
 
@@ -39,6 +42,13 @@ public class PasswordHasher {
 
 	}
 
+	/**
+	 * Validates password against a stored hash
+	 *
+	 * @param password
+	 * @param correctHash
+	 * @return true if the password is valid
+	 */
 	public boolean validatePassword(String password, String correctHash) {
 
 		String[] hashParams = correctHash.split(":");

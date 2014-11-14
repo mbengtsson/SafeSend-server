@@ -2,10 +2,7 @@ package se.teamgejm.safesendserver.domain;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
@@ -24,6 +21,7 @@ public class User implements IdHolder, Comparable<User> {
 	private String password;
 
 	@NotBlank
+	@Column(columnDefinition = "TEXT")
 	private String publicKey;
 
 	public User() {
