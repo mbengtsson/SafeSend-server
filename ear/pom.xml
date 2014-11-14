@@ -48,7 +48,7 @@
 						<webModule>
 							<groupId>se.teamgejm.safesendserver</groupId>
 							<artifactId>safesendserver-rest-war</artifactId>
-							<contextRoot>/safesendserver/api</contextRoot>
+							<contextRoot>/</contextRoot>
 						</webModule>
 
 					</modules>
