@@ -160,12 +160,14 @@ public class LogEntry implements IdHolder, Comparable<LogEntry> {
 	}
 
 	public enum ObjectType {
-		TEXT_MESSAGE;
+		TEXT_MESSAGE,
+		USER;
 	}
 
 	public enum Verb {
 		SEND,
-		RECEIVE;
+		RECEIVE,
+		CREATE;
 	}
 
 }

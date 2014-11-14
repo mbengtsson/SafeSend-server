@@ -1,12 +1,16 @@
 package se.teamgejm.safesendserver.rest.controller;
 
+import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
+import se.teamgejm.safesendserver.rest.model.response.CreateUserResponse;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.GetUserResponse;
+import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 import se.teamgejm.safesendserver.util.hash.PasswordHasher;
 
@@ -23,12 +27,16 @@ public class UserRestController {
 	@Inject
 	UserService userService;
 
-	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity<String> createUser(@RequestBody CreateUserRequest request) {
+	@Inject
+	LogService logService;
+
+	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = "application/json",
+			produces = "application/json")
+	public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest request) {
 
 		if (request == null || request.getUsername() == null || request.getPassword() == null || request.getPublicKey
 				() == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<CreateUserResponse>(new CreateUserResponse(0), HttpStatus.BAD_REQUEST);
 		}
 
 		PasswordHasher passHash = new PasswordHasher();
@@ -39,10 +47,13 @@ public class UserRestController {
 		if (!userService.getAllUsers().contains(user)) {
 			userService.createUser(user);
 		} else {
-			return new ResponseEntity<String>("", HttpStatus.CONFLICT);
+			return new ResponseEntity<CreateUserResponse>(new CreateUserResponse(0), HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<String>("", HttpStatus.OK);
+		logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
+				LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
+
+		return new ResponseEntity<CreateUserResponse>(new CreateUserResponse(user.getId()), HttpStatus.OK);
 
 	}
 
