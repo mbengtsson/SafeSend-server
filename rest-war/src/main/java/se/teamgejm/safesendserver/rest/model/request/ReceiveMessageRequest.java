@@ -7,6 +7,8 @@ public class ReceiveMessageRequest {
 
 	private long messageId;
 
+	private String password;
+
 	public long getMessageId() {
 		return messageId;
 	}
@@ -15,4 +17,11 @@ public class ReceiveMessageRequest {
 		this.messageId = messageId;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

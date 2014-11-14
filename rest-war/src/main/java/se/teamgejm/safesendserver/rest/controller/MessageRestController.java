@@ -9,11 +9,12 @@ import se.teamgejm.safesendserver.domain.Message;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.ReceiveMessageRequest;
 import se.teamgejm.safesendserver.rest.model.request.SendMessageRequest;
-import se.teamgejm.safesendserver.rest.model.response.NewMessagesResponseItem;
+import se.teamgejm.safesendserver.rest.model.response.NewMessagesResponse;
 import se.teamgejm.safesendserver.rest.model.response.ReceiveMessageResponse;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.MessageService;
 import se.teamgejm.safesendserver.service.UserService;
+import se.teamgejm.safesendserver.util.hash.PasswordHasher;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -48,6 +49,12 @@ public class MessageRestController {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
+		PasswordHasher passHash = new PasswordHasher();
+
+		if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(), sender.getPassword())) {
+			return new ResponseEntity<String>("", HttpStatus.FORBIDDEN);
+		}
+
 		Message message = new Message(request.getMessage(), sender, receiver, DateTime.now());
 
 		messageService.createMessage(message);
@@ -74,6 +81,14 @@ public class MessageRestController {
 					HttpStatus.BAD_REQUEST);
 		}
 
+		PasswordHasher passHash = new PasswordHasher();
+
+		if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(),
+				message.getReciever().getPassword())) {
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null),
+					HttpStatus.FORBIDDEN);
+		}
+
 		User sender = message.getSender();
 
 		messageService.removeMessage(message);
@@ -86,21 +101,21 @@ public class MessageRestController {
 	}
 
 	@RequestMapping(value = "/message/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<List<NewMessagesResponseItem>> newMessages(@PathVariable long id) {
+	public ResponseEntity<List<NewMessagesResponse>> newMessages(@PathVariable long id) {
 
-		List<NewMessagesResponseItem> newMessages = new ArrayList<NewMessagesResponseItem>();
+		List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
 		User receiver = userService.getUser(id);
 
 		if (receiver == null) {
-			return new ResponseEntity<List<NewMessagesResponseItem>>(newMessages, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.NOT_FOUND);
 		}
 
 		for (Message message : messageService.getMessagesByReciever(receiver)) {
-			newMessages.add(new NewMessagesResponseItem(message.getId(), message.getSender().getId(),
+			newMessages.add(new NewMessagesResponse(message.getId(), message.getSender().getId(),
 					message.getSender().getUsername()));
 		}
 
-		return new ResponseEntity<List<NewMessagesResponseItem>>(newMessages, HttpStatus.OK);
+		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);
 
 	}
 }

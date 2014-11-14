@@ -11,6 +11,8 @@ public class SendMessageRequest {
 
 	private String message;
 
+	private String password;
+
 	public long getSenderId() {
 		return senderId;
 	}
@@ -33,5 +35,13 @@ public class SendMessageRequest {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

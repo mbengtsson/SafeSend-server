@@ -3,7 +3,7 @@ package se.teamgejm.safesendserver.rest.model.response;
 /**
  * Created by Marcus Bengtsson on 2014-11-14.
  */
-public class NewMessagesResponseItem {
+public class NewMessagesResponse {
 
 	private long messageId;
 
@@ -11,7 +11,7 @@ public class NewMessagesResponseItem {
 
 	private String sender;
 
-	public NewMessagesResponseItem(long messageId, long senderId, String sender) {
+	public NewMessagesResponse(long messageId, long senderId, String sender) {
 		this.messageId = messageId;
 		this.senderId = senderId;
 		this.sender = sender;
