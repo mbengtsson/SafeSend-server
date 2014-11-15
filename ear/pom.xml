@@ -63,7 +63,7 @@
                 <groupId>org.jboss.as.plugins</groupId>
                 <artifactId>jboss-as-maven-plugin</artifactId>
                 <configuration>
-                    <username>safesend</username>
+                    <username>admin</username>
                     <password>1snelhest!</password>
                     <skip>false</skip>
                 </configuration>
