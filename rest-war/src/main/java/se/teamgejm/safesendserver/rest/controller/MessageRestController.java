@@ -70,14 +70,14 @@ public class MessageRestController {
 	public ResponseEntity<ReceiveMessageResponse> receiveMessage(@RequestBody ReceiveMessageRequest request) {
 
 		if (request == null) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null),
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null, 0),
 					HttpStatus.BAD_REQUEST);
 		}
 
 		Message message = messageService.getMessage(request.getMessageId());
 
 		if (message == null) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null),
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null, 0),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -85,7 +85,7 @@ public class MessageRestController {
 
 		if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(),
 				message.getReciever().getPassword())) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null),
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null, 0),
 					HttpStatus.FORBIDDEN);
 		}
 
@@ -97,7 +97,7 @@ public class MessageRestController {
 				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
 
 		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender.getId(),
-				sender.getPublicKey(), message.getMessage()), HttpStatus.OK);
+				sender.getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/message/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -112,7 +112,7 @@ public class MessageRestController {
 
 		for (Message message : messageService.getMessagesByReciever(receiver)) {
 			newMessages.add(new NewMessagesResponse(message.getId(), message.getSender().getId(),
-					message.getSender().getUsername()));
+					message.getSender().getUsername(), message.getTimeStamp().getMillis()));
 		}
 
 		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);

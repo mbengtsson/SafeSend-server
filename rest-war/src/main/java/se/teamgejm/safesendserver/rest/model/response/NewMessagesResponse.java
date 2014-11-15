@@ -11,10 +11,13 @@ public class NewMessagesResponse {
 
 	private String sender;
 
-	public NewMessagesResponse(long messageId, long senderId, String sender) {
+	private long timeStamp;
+
+	public NewMessagesResponse(long messageId, long senderId, String sender, long timeStamp) {
 		this.messageId = messageId;
 		this.senderId = senderId;
 		this.sender = sender;
+		this.timeStamp = timeStamp;
 	}
 
 	public long getMessageId() {
@@ -39,5 +42,13 @@ public class NewMessagesResponse {
 
 	public void setSender(String sender) {
 		this.sender = sender;
+	}
+
+	public long getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 }
