@@ -11,6 +11,7 @@ import se.teamgejm.safesendserver.rest.model.request.ReceiveMessageRequest;
 import se.teamgejm.safesendserver.rest.model.request.SendMessageRequest;
 import se.teamgejm.safesendserver.rest.model.response.NewMessagesResponse;
 import se.teamgejm.safesendserver.rest.model.response.ReceiveMessageResponse;
+import se.teamgejm.safesendserver.rest.model.response.UserResponse;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.MessageService;
 import se.teamgejm.safesendserver.service.UserService;
@@ -70,14 +71,14 @@ public class MessageRestController {
 	public ResponseEntity<ReceiveMessageResponse> receiveMessage(@RequestBody ReceiveMessageRequest request) {
 
 		if (request == null) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null, 0),
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
 					HttpStatus.BAD_REQUEST);
 		}
 
 		Message message = messageService.getMessage(request.getMessageId());
 
 		if (message == null) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null, 0),
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -85,19 +86,20 @@ public class MessageRestController {
 
 		if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(),
 				message.getReciever().getPassword())) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(0, null, null, 0),
+			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
 					HttpStatus.FORBIDDEN);
 		}
 
-		User sender = message.getSender();
+		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
 
 		messageService.removeMessage(message);
 
 		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
 				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
 
-		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender.getId(),
-				sender.getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()), HttpStatus.OK);
+		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender,
+				message.getSender().getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()),
+				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/message/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -111,8 +113,8 @@ public class MessageRestController {
 		}
 
 		for (Message message : messageService.getMessagesByReciever(receiver)) {
-			newMessages.add(new NewMessagesResponse(message.getId(), message.getSender().getId(),
-					message.getSender().getUsername(), message.getTimeStamp().getMillis()));
+			UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
+			newMessages.add(new NewMessagesResponse(message.getId(), sender, message.getTimeStamp().getMillis()));
 		}
 
 		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);

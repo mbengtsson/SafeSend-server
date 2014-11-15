@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
-import se.teamgejm.safesendserver.rest.model.response.CreateUserResponse;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
-import se.teamgejm.safesendserver.rest.model.response.GetUserResponse;
+import se.teamgejm.safesendserver.rest.model.response.UserResponse;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 import se.teamgejm.safesendserver.util.hash.PasswordHasher;
@@ -32,11 +31,11 @@ public class UserRestController {
 
 	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = "application/json",
 			produces = "application/json")
-	public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest request) {
+	public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
 
 		if (request == null || request.getUsername() == null || request.getPassword() == null || request.getPublicKey
 				() == null) {
-			return new ResponseEntity<CreateUserResponse>(new CreateUserResponse(0), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<UserResponse>(new UserResponse(0, null), HttpStatus.BAD_REQUEST);
 		}
 
 		PasswordHasher passHash = new PasswordHasher();
@@ -47,26 +46,26 @@ public class UserRestController {
 		if (!userService.getAllUsers().contains(user)) {
 			userService.createUser(user);
 		} else {
-			return new ResponseEntity<CreateUserResponse>(new CreateUserResponse(0), HttpStatus.CONFLICT);
+			return new ResponseEntity<UserResponse>(new UserResponse(0, null), HttpStatus.CONFLICT);
 		}
 
 		logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
 				LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
 
-		return new ResponseEntity<CreateUserResponse>(new CreateUserResponse(user.getId()), HttpStatus.OK);
+		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()), HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GetUserResponse> getUser(@PathVariable long id) {
+	public ResponseEntity<UserResponse> getUser(@PathVariable long id) {
 
 		User user = userService.getUser(id);
 
 		if (user == null) {
-			return new ResponseEntity<GetUserResponse>(new GetUserResponse(0, null), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<UserResponse>(new UserResponse(0, null), HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<GetUserResponse>(new GetUserResponse(user.getId(), user.getUsername()),
+		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()),
 				HttpStatus.OK);
 
 	}
@@ -84,14 +83,14 @@ public class UserRestController {
 	}
 
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<List<GetUserResponse>> getAllUsers() {
+	public ResponseEntity<List<UserResponse>> getAllUsers() {
 
-		List<GetUserResponse> userList = new ArrayList<GetUserResponse>();
+		List<UserResponse> userList = new ArrayList<UserResponse>();
 
 		for (User user : userService.getAllUsers()) {
-			userList.add(new GetUserResponse(user.getId(), user.getUsername()));
+			userList.add(new UserResponse(user.getId(), user.getUsername()));
 		}
 
-		return new ResponseEntity<List<GetUserResponse>>(userList, HttpStatus.OK);
+		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
 	}
 }

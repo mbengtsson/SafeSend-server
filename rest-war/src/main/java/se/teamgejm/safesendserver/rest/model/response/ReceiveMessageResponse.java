@@ -5,7 +5,7 @@ package se.teamgejm.safesendserver.rest.model.response;
  */
 public class ReceiveMessageResponse {
 
-	private long senderId;
+	private UserResponse sender;
 
 	private String senderPublicKey;
 
@@ -13,19 +13,19 @@ public class ReceiveMessageResponse {
 
 	private long timeStamp;
 
-	public ReceiveMessageResponse(long senderId, String senderPublicKey, String message, long timeStamp) {
-		this.senderId = senderId;
+	public ReceiveMessageResponse(UserResponse sender, String senderPublicKey, String message, long timeStamp) {
+		this.sender = sender;
 		this.senderPublicKey = senderPublicKey;
 		this.message = message;
 		this.timeStamp = timeStamp;
 	}
 
-	public long getSenderId() {
-		return senderId;
+	public UserResponse getSender() {
+		return sender;
 	}
 
-	public void setSenderId(long senderId) {
-		this.senderId = senderId;
+	public void setSender(UserResponse senderId) {
+		this.sender = senderId;
 	}
 
 	public String getSenderPublicKey() {

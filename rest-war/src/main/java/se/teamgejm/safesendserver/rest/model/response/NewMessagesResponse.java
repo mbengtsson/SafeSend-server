@@ -7,15 +7,12 @@ public class NewMessagesResponse {
 
 	private long messageId;
 
-	private long senderId;
-
-	private String sender;
+	private UserResponse sender;
 
 	private long timeStamp;
 
-	public NewMessagesResponse(long messageId, long senderId, String sender, long timeStamp) {
+	public NewMessagesResponse(long messageId, UserResponse sender, long timeStamp) {
 		this.messageId = messageId;
-		this.senderId = senderId;
 		this.sender = sender;
 		this.timeStamp = timeStamp;
 	}
@@ -28,19 +25,11 @@ public class NewMessagesResponse {
 		this.messageId = messageId;
 	}
 
-	public long getSenderId() {
-		return senderId;
-	}
-
-	public void setSenderId(long senderId) {
-		this.senderId = senderId;
-	}
-
-	public String getSender() {
+	public UserResponse getSender() {
 		return sender;
 	}
 
-	public void setSender(String sender) {
+	public void setSender(UserResponse sender) {
 		this.sender = sender;
 	}
 
