@@ -14,6 +14,6 @@ public class IndexController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> index () {
-        return new ResponseEntity<String>("SafeSend", HttpStatus.OK);
+        return new ResponseEntity<String>("SafeSend - Jenkins test", HttpStatus.OK);
     }
 }
