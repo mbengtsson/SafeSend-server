@@ -63,6 +63,7 @@
                 <groupId>org.jboss.as.plugins</groupId>
                 <artifactId>jboss-as-maven-plugin</artifactId>
                 <configuration>
+                    <!-- Username and password used for jenkins -->
                     <username>admin</username>
                     <password>1snelhest!</password>
                     <skip>false</skip>
