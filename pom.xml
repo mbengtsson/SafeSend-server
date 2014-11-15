@@ -149,8 +149,6 @@
                     <version>${version.jboss.as}</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <username>safesend</username>
-                        <password>1snelhest!</password>
                         <skip>true</skip>
                     </configuration>
                 </plugin>
