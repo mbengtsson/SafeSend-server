@@ -27,97 +27,97 @@ import java.util.List;
 @RestController
 public class MessageRestController {
 
-	@Inject
-	UserService userService;
+    @Inject
+    UserService userService;
 
-	@Inject
-	MessageService messageService;
+    @Inject
+    MessageService messageService;
 
-	@Inject
-	LogService logService;
+    @Inject
+    LogService logService;
 
-	@RequestMapping(value = "/message/send", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity<String> sendMessage(@RequestBody SendMessageRequest request) {
+    @RequestMapping(value = "/messages/send", method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<String> sendMessage (@RequestBody SendMessageRequest request) {
 
-		if (request == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-		}
+        if (request == null) {
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+        }
 
-		User sender = userService.getUser(request.getSenderId());
-		User receiver = userService.getUser(request.getReceiverId());
+        User sender = userService.getUser(request.getSenderId());
+        User receiver = userService.getUser(request.getReceiverId());
 
-		if (sender == null || receiver == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-		}
+        if (sender == null || receiver == null) {
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+        }
 
-		PasswordHasher passHash = new PasswordHasher();
+        PasswordHasher passHash = new PasswordHasher();
 
-		if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(), sender.getPassword())) {
-			return new ResponseEntity<String>("", HttpStatus.FORBIDDEN);
-		}
+        if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(), sender.getPassword())) {
+            return new ResponseEntity<String>("", HttpStatus.FORBIDDEN);
+        }
 
-		Message message = new Message(request.getMessage(), sender, receiver, DateTime.now());
+        Message message = new Message(request.getMessage(), sender, receiver, DateTime.now());
 
-		messageService.createMessage(message);
+        messageService.createMessage(message);
 
-		logService.createLogEntry(new LogEntry(request.getSenderId(), request.getReceiverId(),
-				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.SEND, DateTime.now()));
+        logService.createLogEntry(new LogEntry(request.getSenderId(), request.getReceiverId(),
+                LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.SEND, DateTime.now()));
 
-		return new ResponseEntity<String>("", HttpStatus.OK);
-	}
+        return new ResponseEntity<String>("", HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/message/receive", method = RequestMethod.POST, consumes = "application/json",
-			produces = "application/json")
-	public ResponseEntity<ReceiveMessageResponse> receiveMessage(@RequestBody ReceiveMessageRequest request) {
+    @RequestMapping(value = "/messages/receive", method = RequestMethod.POST, consumes = "application/json",
+            produces = "application/json")
+    public ResponseEntity<ReceiveMessageResponse> receiveMessage (@RequestBody ReceiveMessageRequest request) {
 
-		if (request == null) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
-					HttpStatus.BAD_REQUEST);
-		}
+        if (request == null) {
+            return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
+                    HttpStatus.BAD_REQUEST);
+        }
 
-		Message message = messageService.getMessage(request.getMessageId());
+        Message message = messageService.getMessage(request.getMessageId());
 
-		if (message == null) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
-					HttpStatus.BAD_REQUEST);
-		}
+        if (message == null) {
+            return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
+                    HttpStatus.BAD_REQUEST);
+        }
 
-		PasswordHasher passHash = new PasswordHasher();
+        PasswordHasher passHash = new PasswordHasher();
 
-		if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(),
-				message.getReciever().getPassword())) {
-			return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
-					HttpStatus.FORBIDDEN);
-		}
+        if (request.getPassword() == null || !passHash.validatePassword(request.getPassword(),
+                message.getReciever().getPassword())) {
+            return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(null, null, null, 0),
+                    HttpStatus.FORBIDDEN);
+        }
 
-		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
+        UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
 
-		messageService.removeMessage(message);
+        messageService.removeMessage(message);
 
-		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
-				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
+        logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
+                LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
 
-		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender,
-				message.getSender().getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()),
-				HttpStatus.OK);
-	}
+        return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender,
+                message.getSender().getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()),
+                HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/message/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<List<NewMessagesResponse>> newMessages(@PathVariable long id) {
+    @RequestMapping(value = "/messages/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<NewMessagesResponse>> newMessages (@PathVariable long id) {
 
-		List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
-		User receiver = userService.getUser(id);
+        List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
+        User receiver = userService.getUser(id);
 
-		if (receiver == null) {
-			return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.NOT_FOUND);
-		}
+        if (receiver == null) {
+            return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.NOT_FOUND);
+        }
 
-		for (Message message : messageService.getMessagesByReciever(receiver)) {
-			UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
-			newMessages.add(new NewMessagesResponse(message.getId(), sender, message.getTimeStamp().getMillis()));
-		}
+        for (Message message : messageService.getMessagesByReciever(receiver)) {
+            UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
+            newMessages.add(new NewMessagesResponse(message.getId(), sender, message.getTimeStamp().getMillis()));
+        }
 
-		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);
+        return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);
 
-	}
+    }
 }
