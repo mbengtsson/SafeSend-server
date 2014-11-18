@@ -8,6 +8,7 @@ import javax.persistence.*;
  * Created by Marcus Bengtsson on 2014-11-13.
  */
 @Entity
+@NamedQuery(name = "getUserByUsername", query = "select u from User u where u.username = :username")
 public class User implements IdHolder, Comparable<User> {
 
 	@Id

@@ -23,77 +23,87 @@ import java.util.List;
 @RestController
 public class UserRestController {
 
-    @Inject
-    UserService userService;
+	@Inject
+	UserService userService;
 
-    @Inject
-    LogService logService;
+	@Inject
+	LogService logService;
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<UserResponse>> getAllUsers () {
+	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity getAllUsers(@RequestHeader("Authorization") String authorization) {
 
-        List<UserResponse> userList = new ArrayList<UserResponse>();
+		if (!userService.checkAuthorization(authorization)) {
+			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+		}
 
-        for (User user : userService.getAllUsers()) {
-            userList.add(new UserResponse(user.getId(), user.getUsername()));
-        }
+		List<UserResponse> userList = new ArrayList<UserResponse>();
 
-        return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
-    }
+		for (User user : userService.getAllUsers()) {
+			userList.add(new UserResponse(user.getId(), user.getUsername()));
+		}
 
-    @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
-            produces = "application/json")
-    public ResponseEntity<UserResponse> createUser (@RequestBody CreateUserRequest request) {
+		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
+	}
 
-        if (request == null || request.getUsername() == null || request.getPassword() == null || request.getPublicKey
-                () == null) {
-            return new ResponseEntity<UserResponse>(new UserResponse(0, null), HttpStatus.BAD_REQUEST);
-        }
+	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
+			produces = "application/json")
+	public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
 
-        PasswordHasher passHash = new PasswordHasher();
+		if (request == null || request.getUsername() == null || request.getPassword() == null || request.getPublicKey
+				() == null) {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
 
-        User user = new User(request.getUsername(), passHash.getPasswordHash(request.getPassword()),
-                request.getPublicKey());
+		PasswordHasher passHash = new PasswordHasher();
 
-        if (!userService.getAllUsers().contains(user)) {
-            userService.createUser(user);
-        }
-        else {
-            return new ResponseEntity<UserResponse>(new UserResponse(0, null), HttpStatus.CONFLICT);
-        }
+		User user = new User(request.getUsername(), passHash.getPasswordHash(request.getPassword()),
+				request.getPublicKey());
 
-        logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
-                LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
+		if (!userService.getAllUsers().contains(user)) {
+			userService.createUser(user);
+		} else {
+			return new ResponseEntity<String>("", HttpStatus.CONFLICT);
+		}
 
-        return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()), HttpStatus.OK);
+		logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
+				LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
 
-    }
+		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()), HttpStatus.OK);
 
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<UserResponse> getUser (@PathVariable long id) {
+	}
 
-        User user = userService.getUser(id);
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity getUser(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
 
-        if (user == null) {
-            return new ResponseEntity<UserResponse>(new UserResponse(0, null), HttpStatus.NOT_FOUND);
-        }
+		if (!userService.checkAuthorization(authorization)) {
+			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+		}
 
-        return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()),
-                HttpStatus.OK);
+		User user = userService.getUser(id);
 
-    }
+		if (user == null) {
+			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+		}
 
-    @RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<GetPublicKeyResponse> getPublicKey (@PathVariable long id) {
+		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()),
+				HttpStatus.OK);
 
-        User user = userService.getUser(id);
+	}
 
-        if (user == null) {
-            return new ResponseEntity<GetPublicKeyResponse>(new GetPublicKeyResponse(id, null), HttpStatus.NOT_FOUND);
-        }
+	@RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity getPublicKey(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
 
-        return new ResponseEntity<GetPublicKeyResponse>(new GetPublicKeyResponse(id, user.getPublicKey()), HttpStatus.OK);
-    }
+		if (!userService.checkAuthorization(authorization)) {
+			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+		}
 
+		User user = userService.getUser(id);
+
+		if (user == null) {
+			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<GetPublicKeyResponse>(new GetPublicKeyResponse(id, user.getPublicKey()), HttpStatus.OK);
+	}
 
 }

@@ -19,5 +19,11 @@ public interface UserService {
 
 	void updateUser(User user);
 
+	User getUserByUsername(String username);
+
 	Collection<User> getAllUsers();
+
+	public User getAuthorizedUser(String authorization);
+
+	public boolean checkAuthorization(String authorization);
 }
