@@ -18,7 +18,7 @@ public class PasswordHasher {
 	private static final String HASH_ALGORITHM = "PBKDF2WithHmacSHA1";
 	private static final String SALT_ALGORITHM = "SHA1PRNG";
 
-	private static final int PBKDF2_ITERATIONS = 1000;
+	private static final int PBKDF2_ITERATIONS = 2048;
 	private static final int SALT_BYTES = 32;
 	private static final int HASH_BITS = 512;
 

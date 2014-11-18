@@ -21,7 +21,7 @@ public class DefaultUserService implements UserService {
 	private static final String AUTHORIZATION_TYPE = "Basic";
 
 	@Inject
-	UserDao userDao;
+	private UserDao userDao;
 
 	@Override
 	public User createUser(User user) {

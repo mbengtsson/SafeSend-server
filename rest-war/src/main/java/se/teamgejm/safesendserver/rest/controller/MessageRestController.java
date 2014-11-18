@@ -26,14 +26,21 @@ import java.util.List;
 public class MessageRestController {
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@Inject
-	MessageService messageService;
+	private MessageService messageService;
 
 	@Inject
-	LogService logService;
+	private LogService logService;
 
+	/**
+	 * REST-endpoint used to send a message. Requires authorization.
+	 *
+	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+	 * @param request       the message-request in json (see API-doc)
+	 * @return
+	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity sendMessage(@RequestHeader("Authorization") String authorization,
 			@RequestBody SendMessageRequest request) {
@@ -55,7 +62,6 @@ public class MessageRestController {
 		}
 
 		Message message = new Message(request.getMessage(), authorizedUser, receiver, DateTime.now());
-
 		messageService.createMessage(message);
 
 		logService.createLogEntry(new LogEntry(authorizedUser.getId(), request.getReceiverId(),
@@ -64,6 +70,13 @@ public class MessageRestController {
 		return new ResponseEntity<String>("", HttpStatus.OK);
 	}
 
+	/**
+	 * REST-endpoint used to receive a message, note that the message is removed afterwards. Requires authorization.
+	 *
+	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+	 * @param id            message id
+	 * @return the message together with the senders public-key
+	 */
 	@RequestMapping(value = "/messages/{id}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity receiveMessage(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
 
@@ -80,9 +93,7 @@ public class MessageRestController {
 		}
 
 		messageService.removeMessage(message);
-
 		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
-
 		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
 				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
 
@@ -91,8 +102,14 @@ public class MessageRestController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * REST-endpoint returning a list of messages for the authorized user. Requires authorization.
+	 *
+	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+	 * @return list of messages
+	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity newMessages(@RequestHeader("Authorization") String authorization) {
+	public ResponseEntity listMessages(@RequestHeader("Authorization") String authorization) {
 
 		User authorizedUser = userService.getAuthorizedUser(authorization);
 

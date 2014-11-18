@@ -15,7 +15,7 @@ import java.util.Collection;
 public class DefaultMessageService implements MessageService {
 
 	@Inject
-	MessageDao messageDao;
+	private MessageDao messageDao;
 
 	@Override
 	public Message createMessage(Message message) {

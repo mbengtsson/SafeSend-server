@@ -24,11 +24,16 @@ import java.util.List;
 public class UserRestController {
 
 	@Inject
-	UserService userService;
-
+	private UserService userService;
 	@Inject
-	LogService logService;
+	private LogService logService;
 
+	/**
+	 * REST-endpoint that returns a list of all users. Requires authorization.
+	 *
+	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+	 * @return list of all users
+	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity getAllUsers(@RequestHeader("Authorization") String authorization) {
 
@@ -45,6 +50,12 @@ public class UserRestController {
 		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
 	}
 
+	/**
+	 * REST-endpoint for creating a new user
+	 *
+	 * @param request new user request in json (see API-doc)
+	 * @return the created user
+	 */
 	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
 			produces = "application/json")
 	public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
@@ -55,7 +66,6 @@ public class UserRestController {
 		}
 
 		PasswordHasher passHash = new PasswordHasher();
-
 		User user = new User(request.getUsername(), passHash.getPasswordHash(request.getPassword()),
 				request.getPublicKey());
 
@@ -72,6 +82,13 @@ public class UserRestController {
 
 	}
 
+	/**
+	 * REST-endpoint returning a single user. Requires authorization.
+	 *
+	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+	 * @param id            users id
+	 * @return the user
+	 */
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity getUser(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
 
@@ -90,6 +107,13 @@ public class UserRestController {
 
 	}
 
+	/**
+	 * REST-endpoint returning a users public-key. Requires authorization.
+	 *
+	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+	 * @param id            users id
+	 * @return the users public-key
+	 */
 	@RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity getPublicKey(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
 
