@@ -1,4 +1,4 @@
-package se.teamgejm.safesendserver.util.hash;
+package se.teamgejm.safesendserver.security;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -18,14 +18,14 @@ public class PasswordHasher {
 	private static final String HASH_ALGORITHM = "PBKDF2WithHmacSHA1";
 	private static final String SALT_ALGORITHM = "SHA1PRNG";
 
-	private static final int PBKDF2_ITERATIONS = 2048;
+	private static final int PBKDF2_ITERATIONS = 4096;
 	private static final int SALT_BYTES = 32;
 	private static final int HASH_BITS = 512;
 
 	/**
 	 * Returns salted hash of the password
 	 *
-	 * @param password
+	 * @param password the password to hash
 	 * @return salted hash of the password
 	 */
 	public String getPasswordHash(String password) {
@@ -45,8 +45,8 @@ public class PasswordHasher {
 	/**
 	 * Validates password against a stored hash
 	 *
-	 * @param password
-	 * @param correctHash
+	 * @param password    the password to validate
+	 * @param correctHash the correct hash
 	 * @return true if the password is valid
 	 */
 	public boolean validatePassword(String password, String correctHash) {

@@ -11,7 +11,7 @@ import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
-import se.teamgejm.safesendserver.util.hash.PasswordHasher;
+import se.teamgejm.safesendserver.security.PasswordHasher;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

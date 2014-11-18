@@ -3,7 +3,7 @@ package se.teamgejm.safesendserver.service;
 import org.apache.commons.codec.binary.Base64;
 import se.teamgejm.safesendserver.dao.UserDao;
 import se.teamgejm.safesendserver.domain.User;
-import se.teamgejm.safesendserver.util.hash.PasswordHasher;
+import se.teamgejm.safesendserver.security.PasswordHasher;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
