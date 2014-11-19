@@ -1,16 +1,22 @@
 package se.teamgejm.safesendserver.rest.model.request;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Created by Marcus Bengtsson on 2014-11-14.
  */
 public class CreateUserRequest {
 
+	@NotEmpty
 	private String email;
 
+	@NotEmpty
 	private String displayName;
 
+	@NotEmpty
 	private String password;
 
+	@NotEmpty
 	private String publicKey;
 
 	public String getEmail() {

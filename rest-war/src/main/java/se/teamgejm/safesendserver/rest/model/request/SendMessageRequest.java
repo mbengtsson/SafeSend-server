@@ -1,12 +1,18 @@
 package se.teamgejm.safesendserver.rest.model.request;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
  */
 public class SendMessageRequest {
 
+	@NotNull
 	private long receiverId;
 
+	@NotEmpty
 	private String message;
 
 	public long getReceiverId() {

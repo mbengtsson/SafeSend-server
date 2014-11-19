@@ -14,6 +14,7 @@ import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
 			produces = "application/json")
-	public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
+	public ResponseEntity createUser(@Valid @RequestBody CreateUserRequest request) {
 
 		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
 				== null || request

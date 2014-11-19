@@ -16,6 +16,7 @@ import se.teamgejm.safesendserver.service.MessageService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class MessageRestController {
 	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity sendMessage(@RequestHeader("Authorization") String authorization,
-			@RequestBody SendMessageRequest request) {
+			@Valid @RequestBody SendMessageRequest request) {
 
 		User authorizedUser = userService.getAuthorizedUser(authorization);
 
