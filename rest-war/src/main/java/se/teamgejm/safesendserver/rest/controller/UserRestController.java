@@ -9,9 +9,9 @@ import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
+import se.teamgejm.safesendserver.security.PasswordHasher;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
-import se.teamgejm.safesendserver.security.PasswordHasher;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class UserRestController {
 		List<UserResponse> userList = new ArrayList<UserResponse>();
 
 		for (User user : userService.getAllUsers()) {
-			userList.add(new UserResponse(user.getId(), user.getUsername()));
+			userList.add(new UserResponse(user.getId(), user.getEmail(), user.getDisplayName()));
 		}
 
 		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
@@ -60,13 +60,16 @@ public class UserRestController {
 			produces = "application/json")
 	public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
 
-		if (request == null || request.getUsername() == null || request.getPassword() == null || request.getPublicKey
-				() == null) {
+		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
+				== null || request
+				.getPublicKey
+						() == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
 		PasswordHasher passHash = new PasswordHasher();
-		User user = new User(request.getUsername(), passHash.getPasswordHash(request.getPassword()),
+		User user = new User(request.getEmail(), request.getDisplayName(), passHash.getPasswordHash(request
+				.getPassword()),
 				request.getPublicKey());
 
 		if (!userService.getAllUsers().contains(user)) {
@@ -78,7 +81,8 @@ public class UserRestController {
 		logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
 				LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
 
-		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()), HttpStatus.OK);
+		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getEmail(),
+				user.getDisplayName()), HttpStatus.OK);
 
 	}
 
@@ -102,7 +106,7 @@ public class UserRestController {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getUsername()),
+		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getDisplayName(), user.getEmail()),
 				HttpStatus.OK);
 
 	}

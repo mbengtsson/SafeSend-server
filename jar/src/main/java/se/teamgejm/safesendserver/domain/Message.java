@@ -20,6 +20,7 @@ public class Message implements IdHolder, Comparable<Message> {
 	private long id;
 
 	@NotBlank
+	@Column(columnDefinition = "TEXT")
 	private String message;
 
 	@NotNull

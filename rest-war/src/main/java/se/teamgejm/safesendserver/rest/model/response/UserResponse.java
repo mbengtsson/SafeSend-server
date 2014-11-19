@@ -7,11 +7,14 @@ public class UserResponse {
 
 	private long id;
 
-	private String username;
+	private String email;
 
-	public UserResponse(long id, String username) {
+	private String displayName;
+
+	public UserResponse(long id, String email, String displayName) {
 		this.id = id;
-		this.username = username;
+		this.email = email;
+		this.displayName = displayName;
 	}
 
 	public long getId() {
@@ -22,12 +25,19 @@ public class UserResponse {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 }

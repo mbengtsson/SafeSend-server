@@ -47,7 +47,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public User getUserByUsername(String username) {
-		return userDao.getUserByUsername(username);
+		return userDao.getUserByEmail(username);
 	}
 
 	@Override

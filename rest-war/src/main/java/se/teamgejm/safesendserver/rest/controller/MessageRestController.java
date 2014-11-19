@@ -93,7 +93,8 @@ public class MessageRestController {
 		}
 
 		messageService.removeMessage(message);
-		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
+		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
+				message.getSender().getDisplayName());
 		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
 				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
 
@@ -120,7 +121,8 @@ public class MessageRestController {
 		List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
 
 		for (Message message : messageService.getMessagesByReciever(authorizedUser)) {
-			UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getUsername());
+			UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
+					message.getSender().getDisplayName());
 			newMessages.add(new NewMessagesResponse(message.getId(), sender, message.getTimeStamp().getMillis()));
 		}
 

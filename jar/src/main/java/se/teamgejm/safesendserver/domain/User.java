@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Created by Marcus Bengtsson on 2014-11-13.
  */
 @Entity
-@NamedQuery(name = "getUserByUsername", query = "select u from User u where u.username = :username")
+@NamedQuery(name = "getUserByEmail", query = "select u from User u where u.email = :email")
 public class User implements IdHolder, Comparable<User> {
 
 	@Id
@@ -16,7 +16,9 @@ public class User implements IdHolder, Comparable<User> {
 	private long id;
 
 	@NotBlank
-	private String username;
+	private String email;
+
+	private String displayName;
 
 	@NotBlank
 	private String password;
@@ -28,8 +30,9 @@ public class User implements IdHolder, Comparable<User> {
 	public User() {
 	}
 
-	public User(String username, String password, String publicKey) {
-		this.username = username;
+	public User(String email, String displayName, String password, String publicKey) {
+		this.email = email;
+		this.displayName = displayName;
 		this.password = password;
 		this.publicKey = publicKey;
 	}
@@ -42,12 +45,20 @@ public class User implements IdHolder, Comparable<User> {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String username) {
+		this.email = username;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	public String getPassword() {
@@ -70,7 +81,8 @@ public class User implements IdHolder, Comparable<User> {
 	public String toString() {
 		return "User{" +
 				"id=" + id +
-				", username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", displayName='" + displayName + '\'' +
 				", password='" + password + '\'' +
 				", publicKey='" + publicKey + '\'' +
 				'}';
@@ -78,7 +90,7 @@ public class User implements IdHolder, Comparable<User> {
 
 	@Override
 	public int compareTo(User o) {
-		return username.compareTo(o.getUsername());
+		return email.compareTo(o.getEmail());
 	}
 
 	@Override
@@ -92,7 +104,7 @@ public class User implements IdHolder, Comparable<User> {
 
 		User user = (User) o;
 
-		if (!username.equals(user.username)) {
+		if (!email.equals(user.email)) {
 			return false;
 		}
 
@@ -101,6 +113,6 @@ public class User implements IdHolder, Comparable<User> {
 
 	@Override
 	public int hashCode() {
-		return username.hashCode();
+		return email.hashCode();
 	}
 }

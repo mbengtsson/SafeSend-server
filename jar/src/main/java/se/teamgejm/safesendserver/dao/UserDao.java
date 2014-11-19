@@ -11,7 +11,7 @@ import java.util.Collection;
 @Local
 public interface UserDao extends BaseDao<User> {
 
-	User getUserByUsername(String username);
+	User getUserByEmail(String email);
 
 	Collection<User> getAllUsers();
 }
