@@ -18,6 +18,13 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven validator="validator"/>
 
+	<!-- Resolve logical view names to .jsp resources in the /WEB-INF/jsp directory -->
+	<bean
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
 	<context:annotation-config/>
 
 </beans>

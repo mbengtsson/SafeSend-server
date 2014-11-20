@@ -69,7 +69,7 @@ public class UserRestController {
 		}
 
 		PasswordHasher passHash = new PasswordHasher();
-		User user = new User(request.getEmail(), request.getDisplayName(), passHash.getPasswordHash(request
+		User user = new User(request.getEmail(), request.getDisplayName(), passHash.generateHash(request
 				.getPassword()),
 				request.getPublicKey());
 

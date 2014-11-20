@@ -3,6 +3,7 @@ package se.teamgejm.safesendserver.domain;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Marcus Bengtsson on 2014-11-13.
@@ -27,6 +28,10 @@ public class User implements IdHolder, Comparable<User> {
 	@Column(columnDefinition = "TEXT")
 	private String publicKey;
 
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
 	public User() {
 	}
 
@@ -35,6 +40,7 @@ public class User implements IdHolder, Comparable<User> {
 		this.displayName = displayName;
 		this.password = password;
 		this.publicKey = publicKey;
+		this.role = Role.USER;
 	}
 
 	public long getId() {
@@ -77,14 +83,21 @@ public class User implements IdHolder, Comparable<User> {
 		this.publicKey = publicKey;
 	}
 
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
-				"id=" + id +
-				", email='" + email + '\'' +
+				"role=" + role +
 				", displayName='" + displayName + '\'' +
-				", password='" + password + '\'' +
-				", publicKey='" + publicKey + '\'' +
+				", email='" + email + '\'' +
+				", id=" + id +
 				'}';
 	}
 
@@ -114,5 +127,10 @@ public class User implements IdHolder, Comparable<User> {
 	@Override
 	public int hashCode() {
 		return email.hashCode();
+	}
+
+	public enum Role {
+		USER,
+		ADMIN;
 	}
 }

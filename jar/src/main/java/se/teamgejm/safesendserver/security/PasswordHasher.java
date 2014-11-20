@@ -28,7 +28,7 @@ public class PasswordHasher {
 	 * @param password the password to hash
 	 * @return salted hash of the password
 	 */
-	public String getPasswordHash(String password) {
+	public String generateHash(String password) {
 
 		try {
 			byte[] salt = getSalt();
