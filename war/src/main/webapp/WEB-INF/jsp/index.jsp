@@ -10,9 +10,17 @@
           uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
+<head>
+    <title>Safe-send</title>
+    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"  />
+
+</head>
 <body>
 <h1>${title}</h1>
 <h2>${message}</h2>
+
+<a href="<%=request.getContextPath()%>/user.html">User page</a><br>
+<a href="<%=request.getContextPath()%>/admin.html">Administration page</a>
 
 <sec:authorize access="hasAnyRole('USER', 'ADMIN')">
     <!-- For login user -->

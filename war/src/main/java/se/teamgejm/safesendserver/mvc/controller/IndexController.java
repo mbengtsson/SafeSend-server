@@ -20,8 +20,8 @@ public class IndexController {
 	public ModelAndView defaultPage() {
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "Safe-send administration");
-		mav.addObject("message", "Everyone can access this page!");
+		mav.addObject("title", "Safe-send");
+		mav.addObject("message", "Welcome to safe-send, your encrypted messaging service!");
 		mav.setViewName("index");
 		return mav;
 
@@ -31,25 +31,32 @@ public class IndexController {
 	public ModelAndView adminPage() {
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "Safe-send administration");
+		mav.addObject("title", "Safe-send - administration");
 		mav.addObject("message", "Only administrators can access this page!");
 		mav.setViewName("admin");
 		return mav;
 
 	}
 
+	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
+	public ModelAndView userPage() {
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("title", "Safe-send - user");
+		mav.addObject("message", "All users can access this page!");
+		mav.setViewName("user");
+		return mav;
+
+	}
+
 	@RequestMapping(value = "/login.html", method = RequestMethod.GET)
-	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-			@RequestParam(value = "logout", required = false) String logout) {
+	public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
 
 		ModelAndView mav = new ModelAndView();
 		if (error != null) {
 			mav.addObject("error", "Invalid username and password!");
 		}
 
-		if (logout != null) {
-			mav.addObject("msg", "You've been logged out successfully.");
-		}
 		mav.setViewName("login");
 
 		return mav;
@@ -58,7 +65,7 @@ public class IndexController {
 
 	//for 403 access denied page
 	@RequestMapping(value = "/403.html", method = RequestMethod.GET)
-	public ModelAndView accessDenied() {
+	public ModelAndView redirect() {
 
 		ModelAndView mav = new ModelAndView();
 

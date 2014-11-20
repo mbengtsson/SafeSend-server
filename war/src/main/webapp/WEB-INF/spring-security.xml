@@ -12,17 +12,18 @@
 	<http auto-config="true" use-expressions="true">
 
 		<intercept-url pattern="/admin**" access="hasRole('ADMIN')"/>
+		<intercept-url pattern="/user**" access="hasAnyRole('USER', 'ADMIN')"/>
 
 		<!-- access denied page -->
 		<access-denied-handler error-page="/403.html"/>
 
 		<form-login
 				login-page="/login.html"
-				default-target-url="/admin.html"
+				default-target-url="/user.html"
 				authentication-failure-url="/login.html?error"
 				username-parameter="username"
 				password-parameter="password"/>
-		<logout logout-success-url="/login.html?logout"/>
+		<logout logout-success-url="/index.html"/>
 		<!-- enable csrf protection -->
 		<csrf/>
 	</http>
@@ -33,7 +34,7 @@
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="userDetailsService" class="se.teamgejm.safesendserver.mvc.security.CustomPasswordEncoder"/>
+	<beans:bean id="userDetailsService" class="se.teamgejm.safesendserver.mvc.security.SecureUserDetailsService"/>
 	<beans:bean id="passwordEncoder" class="se.teamgejm.safesendserver.mvc.security.CustomPasswordEncoder"/>
 
 </beans:beans>

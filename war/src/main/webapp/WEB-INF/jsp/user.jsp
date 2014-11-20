@@ -6,11 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page session="true"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page session="true" %>
 <html>
 <head>
-    <title>Safe-send - administration page</title>
+    <title>Safe-send - user page</title>
     <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"  />
 
 </head>
@@ -18,10 +18,10 @@
 <h1>${title}</h1>
 <h2>${message}</h2>
 
-<c:url value="/j_spring_security_logout" var="logoutUrl" />
+<c:url value="/j_spring_security_logout" var="logoutUrl"/>
 <form action="${logoutUrl}" method="post" id="logoutForm">
     <input type="hidden" name="${_csrf.parameterName}"
-           value="${_csrf.token}" />
+           value="${_csrf.token}"/>
 </form>
 <script>
     function formSubmit() {
