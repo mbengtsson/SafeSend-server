@@ -22,6 +22,12 @@
         </dependency>
         <dependency>
             <groupId>se.teamgejm.safesendserver</groupId>
+            <artifactId>safesendserver-web-war</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>se.teamgejm.safesendserver</groupId>
             <artifactId>safesendserver-jar</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>ejb</type>
@@ -50,6 +56,11 @@
                             <groupId>se.teamgejm.safesendserver</groupId>
                             <artifactId>safesendserver-rest-war</artifactId>
                             <contextRoot>/</contextRoot>
+                        </webModule>
+                        <webModule>
+                            <groupId>se.teamgejm.safesendserver</groupId>
+                            <artifactId>safesendserver-web-war</artifactId>
+                            <contextRoot>/admin</contextRoot>
                         </webModule>
 
                     </modules>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+	<!-- This tells Spring to search for annotations in the specified package 
+		(and subpackages) -->
+	<context:component-scan base-package="se.teamgejm.safesendserver"/>
+
+	<bean id="validator"
+	      class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+
+	<!-- EJB beans must be explicitly configured using JNDI. This is the connection 
+		between Spring and EJB -->
+
+	<!--
+	<jee:local-slsb id="logService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultLogService"
+	                business-interface="se.teamgejm.safesendserver.service.LogService"/>
+
+	<jee:local-slsb id="userService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultUserService"
+	                business-interface="se.teamgejm.safesendserver.service.UserService"/>
+
+	<jee:local-slsb id="messageService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultMessageService"
+	                business-interface="se.teamgejm.safesendserver.service.MessageService"/>
+
+	-->
+</beans>

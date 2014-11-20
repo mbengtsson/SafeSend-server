@@ -11,6 +11,7 @@
 	<modules>
 		<module>jar</module>
 		<module>rest-war</module>
+		<module>war</module>
 		<module>ear</module>
 	</modules>
 
@@ -47,6 +48,13 @@
 			<dependency>
 				<groupId>se.teamgejm.safesendserver</groupId>
 				<artifactId>safesendserver-rest-war</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<type>war</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>se.teamgejm.safesendserver</groupId>
+				<artifactId>safesendserver-web-war</artifactId>
 				<version>1.0-SNAPSHOT</version>
 				<type>war</type>
 				<scope>compile</scope>
