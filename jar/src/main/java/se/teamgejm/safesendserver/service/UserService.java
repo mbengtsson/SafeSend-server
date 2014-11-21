@@ -27,5 +27,5 @@ public interface UserService {
 
     public boolean checkAuthorization (String authorization);
 
-    public boolean validateCredentials (String email, String password);
+    public boolean checkAuthorization (String email, String password);
 }

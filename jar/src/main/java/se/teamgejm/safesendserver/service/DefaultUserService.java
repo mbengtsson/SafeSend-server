@@ -81,12 +81,11 @@ public class DefaultUserService implements UserService {
 
     @Override
     public boolean checkAuthorization (String authorization) {
-
         return getAuthorizedUser(authorization) != null;
     }
 
     @Override
-    public boolean validateCredentials (String email, String password) {
+    public boolean checkAuthorization (String email, String password) {
         User user = getUserByUsername(email);
 
         if (user != null) {

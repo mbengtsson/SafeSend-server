@@ -70,10 +70,7 @@ public class UserRestController {
             return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
 
-        //        logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
-        //                LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
-
-        if (userService.validateCredentials(request.getEmail(), request.getPassword())) {
+        if (userService.checkAuthorization(request.getEmail(), request.getPassword())) {
             return new ResponseEntity<String>("", HttpStatus.OK);
         }
 
