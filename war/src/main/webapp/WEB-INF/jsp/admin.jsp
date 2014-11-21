@@ -15,26 +15,10 @@
 
 </head>
 <body>
-<h1>${title}</h1>
+
+<jsp:include page="header.jsp"/>
+
 <h2>${message}</h2>
-
-<c:url value="/j_spring_security_logout" var="logoutUrl" />
-<form action="${logoutUrl}" method="post" id="logoutForm">
-    <input type="hidden" name="${_csrf.parameterName}"
-           value="${_csrf.token}" />
-</form>
-<script>
-    function formSubmit() {
-        document.getElementById("logoutForm").submit();
-    }
-</script>
-
-<c:if test="${pageContext.request.userPrincipal.name != null}">
-    <h3>
-        Welcome : ${pageContext.request.userPrincipal.name} | <a
-            href="javascript:formSubmit()"> Logout</a>
-    </h3>
-</c:if>
 
 </body>
 </html>

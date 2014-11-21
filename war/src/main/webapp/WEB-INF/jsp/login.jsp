@@ -16,11 +16,11 @@
 </head>
 <body onload='document.loginForm.username.focus();'>
 
-<h1>Safe-send</h1>
+<jsp:include page="header.jsp"/>
 
 <div id="login-box">
 
-    <h3>Login with Username and Password</h3>
+    <h3>Login with Email and Password</h3>
 
     <c:if test="${not empty error}">
         <div class="error">${error}</div>
@@ -31,7 +31,7 @@
 
         <table>
             <tr>
-                <td>User:</td>
+                <td>Email:</td>
                 <td><input type='text' name='username'></td>
             </tr>
             <tr>
