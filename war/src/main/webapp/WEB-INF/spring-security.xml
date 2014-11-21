@@ -34,7 +34,7 @@
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="userDetailsService" class="se.teamgejm.safesendserver.mvc.security.SecureUserDetailsService"/>
+	<beans:bean id="userDetailsService" class="se.teamgejm.safesendserver.mvc.security.CustomAuthenticationProvider"/>
 	<beans:bean id="passwordEncoder" class="se.teamgejm.safesendserver.mvc.security.CustomPasswordEncoder"/>
 
 </beans:beans>

@@ -55,12 +55,12 @@
 						<webModule>
 							<groupId>se.teamgejm.safesendserver</groupId>
 							<artifactId>safesendserver-rest-war</artifactId>
-							<contextRoot>/</contextRoot>
+							<contextRoot>/api</contextRoot>
 						</webModule>
 						<webModule>
 							<groupId>se.teamgejm.safesendserver</groupId>
 							<artifactId>safesendserver-web-war</artifactId>
-							<contextRoot>/web</contextRoot>
+							<contextRoot>/</contextRoot>
 						</webModule>
 
 					</modules>
