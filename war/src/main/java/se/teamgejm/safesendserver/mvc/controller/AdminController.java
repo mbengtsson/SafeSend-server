@@ -9,17 +9,16 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Marcus Bengtsson
  */
 @Controller
-public class IndexController {
+public class AdminController {
 
-	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
-	public ModelAndView defaultPage() {
+	@RequestMapping(value = "/admin.html", method = RequestMethod.GET)
+	public ModelAndView adminPage() {
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "Safe-send");
-		mav.addObject("message", "Welcome to safe-send, your encrypted messaging service!");
-		mav.setViewName("index");
+		mav.addObject("title", "Safe-send - administration");
+		mav.addObject("message", "Only administrators can access this page!");
+		mav.setViewName("admin");
 		return mav;
 
 	}
-
 }

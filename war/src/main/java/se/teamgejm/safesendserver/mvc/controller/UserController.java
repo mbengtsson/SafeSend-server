@@ -9,17 +9,16 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Marcus Bengtsson
  */
 @Controller
-public class IndexController {
+public class UserController {
 
-	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
-	public ModelAndView defaultPage() {
+	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
+	public ModelAndView userPage() {
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "Safe-send");
-		mav.addObject("message", "Welcome to safe-send, your encrypted messaging service!");
-		mav.setViewName("index");
+		mav.addObject("title", "Safe-send - user");
+		mav.addObject("message", "All users can access this page!");
+		mav.setViewName("user");
 		return mav;
 
 	}
-
 }
