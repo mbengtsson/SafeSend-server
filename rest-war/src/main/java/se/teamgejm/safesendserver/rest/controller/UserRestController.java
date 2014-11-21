@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
+import se.teamgejm.safesendserver.rest.model.request.ValidateCredentialsRequest;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
 import se.teamgejm.safesendserver.security.PasswordHasher;
@@ -24,115 +25,151 @@ import java.util.List;
 @RestController
 public class UserRestController {
 
-	@Inject
-	private UserService userService;
-	@Inject
-	private LogService logService;
+    @Inject
+    private UserService userService;
+    @Inject
+    private LogService logService;
 
-	/**
-	 * REST-endpoint that returns a list of all users. Requires authorization.
-	 *
-	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
-	 * @return list of all users
-	 */
-	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getAllUsers(@RequestHeader("Authorization") String authorization) {
+    /**
+     * REST-endpoint that returns a list of all users. Requires authorization.
+     *
+     * @param authorization
+     *         Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+     *
+     * @return list of all users
+     */
+    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity getAllUsers (@RequestHeader("Authorization") String authorization) {
 
-		if (!userService.checkAuthorization(authorization)) {
-			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
-		}
+        if (!userService.checkAuthorization(authorization)) {
+            return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+        }
 
-		List<UserResponse> userList = new ArrayList<UserResponse>();
+        List<UserResponse> userList = new ArrayList<UserResponse>();
 
-		for (User user : userService.getAllUsers()) {
-			userList.add(new UserResponse(user.getId(), user.getEmail(), user.getDisplayName()));
-		}
+        for (User user : userService.getAllUsers()) {
+            userList.add(new UserResponse(user.getId(), user.getEmail(), user.getDisplayName()));
+        }
 
-		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
-	}
+        return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
+    }
 
-	/**
-	 * REST-endpoint for creating a new user
-	 *
-	 * @param request new user request in json (see API-doc)
-	 * @return the created user
-	 */
-	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
-			produces = "application/json")
-	public ResponseEntity createUser(@Valid @RequestBody CreateUserRequest request) {
+    /**
+     * REST-endpoint for validation user credentials
+     *
+     * @param request
+     *         validate credentials request
+     *
+     * @return 200 if the validation succeed, otherwise 401
+     */
+    @RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json",
+            produces = "application/json")
+    public ResponseEntity validateUserCredentials (@Valid @RequestBody ValidateCredentialsRequest request) {
 
-		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
-				== null || request
-				.getPublicKey
-						() == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-		}
+        if (request == null || request.getEmail() == null || request.getPassword() == null) {
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+        }
 
-		PasswordHasher passHash = new PasswordHasher();
-		User user = new User(request.getEmail(), request.getDisplayName(), passHash.generateHash(request
-				.getPassword()),
-				request.getPublicKey());
+        //        logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
+        //                LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
 
-		if (!userService.getAllUsers().contains(user)) {
-			userService.createUser(user);
-		} else {
-			return new ResponseEntity<String>("", HttpStatus.CONFLICT);
-		}
+        if (userService.validateCredentials(request.getEmail(), request.getPassword())) {
+            return new ResponseEntity<String>("", HttpStatus.OK);
+        }
 
-		logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
-				LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
+        return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+    }
 
-		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getEmail(),
-				user.getDisplayName()), HttpStatus.OK);
+    /**
+     * REST-endpoint for creating a new user
+     *
+     * @param request
+     *         new user request in json (see API-doc)
+     *
+     * @return the created user
+     */
+    @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
+            produces = "application/json")
+    public ResponseEntity createUser (@Valid @RequestBody CreateUserRequest request) {
 
-	}
+        if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
+                == null || request
+                .getPublicKey
+                        () == null) {
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+        }
 
-	/**
-	 * REST-endpoint returning a single user. Requires authorization.
-	 *
-	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
-	 * @param id            users id
-	 * @return the user
-	 */
-	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getUser(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
+        PasswordHasher passHash = new PasswordHasher();
+        User user = new User(request.getEmail(), request.getDisplayName(), passHash.generateHash(request
+                .getPassword()),
+                request.getPublicKey());
 
-		if (!userService.checkAuthorization(authorization)) {
-			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
-		}
+        if (!userService.getAllUsers().contains(user)) {
+            userService.createUser(user);
+        }
+        else {
+            return new ResponseEntity<String>("", HttpStatus.CONFLICT);
+        }
 
-		User user = userService.getUser(id);
+        logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
+                LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
 
-		if (user == null) {
-			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
-		}
+        return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getEmail(),
+                user.getDisplayName()), HttpStatus.OK);
 
-		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getDisplayName(), user.getEmail()),
-				HttpStatus.OK);
+    }
 
-	}
+    /**
+     * REST-endpoint returning a single user. Requires authorization.
+     *
+     * @param authorization
+     *         Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+     * @param id
+     *         users id
+     *
+     * @return the user
+     */
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity getUser (@RequestHeader("Authorization") String authorization, @PathVariable long id) {
 
-	/**
-	 * REST-endpoint returning a users public-key. Requires authorization.
-	 *
-	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
-	 * @param id            users id
-	 * @return the users public-key
-	 */
-	@RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getPublicKey(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
+        if (!userService.checkAuthorization(authorization)) {
+            return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+        }
 
-		if (!userService.checkAuthorization(authorization)) {
-			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
-		}
+        User user = userService.getUser(id);
 
-		User user = userService.getUser(id);
+        if (user == null) {
+            return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+        }
 
-		if (user == null) {
-			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
-		}
+        return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getDisplayName(), user.getEmail()),
+                HttpStatus.OK);
 
-		return new ResponseEntity<GetPublicKeyResponse>(new GetPublicKeyResponse(id, user.getPublicKey()), HttpStatus.OK);
-	}
+    }
 
+    /**
+     * REST-endpoint returning a users public-key. Requires authorization.
+     *
+     * @param authorization
+     *         Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
+     * @param id
+     *         users id
+     *
+     * @return the users public-key
+     */
+    @RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity getPublicKey (@RequestHeader("Authorization") String authorization, @PathVariable long id) {
+
+        if (!userService.checkAuthorization(authorization)) {
+            return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
+        }
+
+        User user = userService.getUser(id);
+
+        if (user == null) {
+            return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<GetPublicKeyResponse>(new GetPublicKeyResponse(id, user.getPublicKey()), HttpStatus.OK);
+    }
 }
