@@ -17,31 +17,32 @@
 <body>
 
 <jsp:include page="header.jsp"/>
+<div class="content">
+    <h2>Welcome ${displayName}</h2>
 
-<h2>Welcome ${displayName}</h2>
+    <c:choose>
+        <c:when test="${not empty messages}">
+            <h3>You have ${messagesLength} new messages</h3>
 
-<c:choose>
-    <c:when test="${not empty messages}">
-        <h3>You have ${messagesLength} new messages</h3>
-
-        <table class="list">
-            <tr>
-                <th>From</th>
-                <th></th>
-                <th>Date</th>
-            </tr>
-            <c:forEach items="${messages}" var="message">
+            <table class="list">
                 <tr>
-                    <td>${message.senderName}</td>
-                    <td>(${message.senderEmail})</td>
-                    <td>${message.time}</td>
+                    <th>From</th>
+                    <th></th>
+                    <th>Date</th>
                 </tr>
-            </c:forEach>
-        </table>
-    </c:when>
-    <c:otherwise>
-        <h3>Sorry, you have no new messages</h3>
-    </c:otherwise>
-</c:choose>
+                <c:forEach items="${messages}" var="message">
+                    <tr>
+                        <td>${message.senderName}</td>
+                        <td>(${message.senderEmail})</td>
+                        <td>${message.time}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </c:when>
+        <c:otherwise>
+            <h3>Sorry, you have no new messages</h3>
+        </c:otherwise>
+    </c:choose>
+</div>
 </body>
 </html>

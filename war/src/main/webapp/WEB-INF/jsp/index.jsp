@@ -12,18 +12,18 @@
 <html>
 <head>
     <title>Safe-send</title>
-    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"  />
+    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body>
 
 <jsp:include page="header.jsp"/>
+<div class="content">
+    <h2>${message}</h2>
 
-<h2>${message}</h2>
+    <a href="<%=request.getContextPath()%>/user.html">User page</a><br>
+    <a href="<%=request.getContextPath()%>/admin.html">Administration page</a>
 
-<a href="<%=request.getContextPath()%>/user.html">User page</a><br>
-<a href="<%=request.getContextPath()%>/admin.html">Administration page</a>
-
-
+</div>
 </body>
 </html>

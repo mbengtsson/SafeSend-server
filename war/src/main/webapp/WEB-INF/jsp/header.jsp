@@ -11,7 +11,7 @@
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <header>
     <div class="HeaderLeft">
-        <h1><a href="<%= request.getContextPath() %>/index.html">Safe-send</a></h1>
+        <h1><a href="<%= request.getContextPath() %>/index.html">safeSEND</a></h1>
     </div>
     <div class="HeaderRight">
         <sec:authorize access="hasAnyRole('USER', 'ADMIN')">
@@ -28,8 +28,7 @@
 
             <c:if test="${pageContext.request.userPrincipal.name != null}">
                 <p>
-                    <b>${pageContext.request.userPrincipal.name}</b> | <a
-                        href="javascript:formSubmit()"> Logout</a>
+                        ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
                 </p>
             </c:if>
         </sec:authorize>
