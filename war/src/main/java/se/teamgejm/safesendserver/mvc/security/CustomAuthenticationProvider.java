@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Marcus Bengtsson on 2014-11-20.
  */
-public class SecureUserDetailsService implements UserDetailsService {
+public class CustomAuthenticationProvider implements UserDetailsService {
 
 	@Inject
 	UserService userService;

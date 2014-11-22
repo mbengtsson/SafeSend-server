@@ -12,37 +12,18 @@
 <html>
 <head>
     <title>Safe-send</title>
-    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"  />
+    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body>
-<h1>${title}</h1>
-<h2>${message}</h2>
 
-<a href="<%=request.getContextPath()%>/user.html">User page</a><br>
-<a href="<%=request.getContextPath()%>/admin.html">Administration page</a>
+<jsp:include page="header.jsp"/>
+<div class="content">
+    <h2>${message}</h2>
 
-<sec:authorize access="hasAnyRole('USER', 'ADMIN')">
-    <!-- For login user -->
-    <c:url value="/j_spring_security_logout" var="logoutUrl"/>
-    <form action="${logoutUrl}" method="post" id="logoutForm">
-        <input type="hidden" name="${_csrf.parameterName}"
-               value="${_csrf.token}"/>
-    </form>
-    <script>
-        function formSubmit() {
-            document.getElementById("logoutForm").submit();
-        }
-    </script>
+    <a href="<%=request.getContextPath()%>/user.html">User page</a><br>
+    <a href="<%=request.getContextPath()%>/admin.html">Administration page</a>
 
-    <c:if test="${pageContext.request.userPrincipal.name != null}">
-        <h2>
-            User : ${pageContext.request.userPrincipal.name} | <a
-                href="javascript:formSubmit()"> Logout</a>
-        </h2>
-    </c:if>
-
-
-</sec:authorize>
+</div>
 </body>
 </html>

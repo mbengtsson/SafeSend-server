@@ -11,44 +11,44 @@
 <html>
 <head>
     <title>Safe-send - login Page</title>
-    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"  />
+    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body onload='document.loginForm.username.focus();'>
 
-<h1>Safe-send</h1>
+<jsp:include page="header.jsp"/>
+<div class="content">
+    <div id="login-box">
 
-<div id="login-box">
+        <h3>Login with Email and Password</h3>
 
-    <h3>Login with Username and Password</h3>
+        <c:if test="${not empty error}">
+            <div class="error">${error}</div>
+        </c:if>
 
-    <c:if test="${not empty error}">
-        <div class="error">${error}</div>
-    </c:if>
+        <form name='loginForm'
+              action="<c:url value='/j_spring_security_check' />" method='POST'>
 
-    <form name='loginForm'
-          action="<c:url value='/j_spring_security_check' />" method='POST'>
+            <table>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type='text' name='username'></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type='password' name='password'/></td>
+                </tr>
+                <tr>
+                    <td colspan='2'><input name="submit" type="submit"
+                                           value="submit"/></td>
+                </tr>
+            </table>
 
-        <table>
-            <tr>
-                <td>User:</td>
-                <td><input type='text' name='username'></td>
-            </tr>
-            <tr>
-                <td>Password:</td>
-                <td><input type='password' name='password'/></td>
-            </tr>
-            <tr>
-                <td colspan='2'><input name="submit" type="submit"
-                                       value="submit"/></td>
-            </tr>
-        </table>
+            <input type="hidden" name="${_csrf.parameterName}"
+                   value="${_csrf.token}"/>
 
-        <input type="hidden" name="${_csrf.parameterName}"
-               value="${_csrf.token}"/>
-
-    </form>
+        </form>
+    </div>
 </div>
-
 </body>
 </html>

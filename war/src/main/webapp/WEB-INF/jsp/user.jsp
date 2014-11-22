@@ -11,30 +11,38 @@
 <html>
 <head>
     <title>Safe-send - user page</title>
-    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"  />
+    <link href="<%=request.getContextPath()%>/style/style.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body>
-<h1>${title}</h1>
-<h2>${message}</h2>
 
-<c:url value="/j_spring_security_logout" var="logoutUrl"/>
-<form action="${logoutUrl}" method="post" id="logoutForm">
-    <input type="hidden" name="${_csrf.parameterName}"
-           value="${_csrf.token}"/>
-</form>
-<script>
-    function formSubmit() {
-        document.getElementById("logoutForm").submit();
-    }
-</script>
+<jsp:include page="header.jsp"/>
+<div class="content">
+    <h2>Welcome ${displayName}</h2>
 
-<c:if test="${pageContext.request.userPrincipal.name != null}">
-    <h3>
-        Welcome : ${pageContext.request.userPrincipal.name} | <a
-            href="javascript:formSubmit()"> Logout</a>
-    </h3>
-</c:if>
+    <c:choose>
+        <c:when test="${not empty messages}">
+            <h3>You have ${messagesLength} new messages</h3>
 
+            <table class="list">
+                <tr>
+                    <th>From</th>
+                    <th></th>
+                    <th>Date</th>
+                </tr>
+                <c:forEach items="${messages}" var="message">
+                    <tr>
+                        <td>${message.senderName}</td>
+                        <td>(${message.senderEmail})</td>
+                        <td>${message.time}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </c:when>
+        <c:otherwise>
+            <h3>Sorry, you have no new messages</h3>
+        </c:otherwise>
+    </c:choose>
+</div>
 </body>
 </html>
