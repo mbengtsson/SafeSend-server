@@ -1,5 +1,6 @@
 package se.teamgejm.safesendserver.dao.jpa;
 
+import org.joda.time.DateTime;
 import se.teamgejm.safesendserver.dao.FloodDao;
 import se.teamgejm.safesendserver.domain.FloodEvent;
 import se.teamgejm.safesendserver.domain.FloodType;
@@ -19,13 +20,13 @@ public class JpaFloodDao implements FloodDao {
     private EntityManager em;
 
     @Override
-    public void registerEvent (FloodEvent event) {
+    public void registerEvent (final FloodEvent event) {
         em.persist(event);
     }
 
     @Override
-    public void purgeEvents (FloodType eventType, String identifier) {
-        Query query = em.createNamedQuery("FloodEvent.purge");
+    public void purgeEvents (final FloodType eventType, final String identifier) {
+        final Query query = em.createNamedQuery("FloodEvent.purge");
         query.setParameter("event", eventType);
         query.setParameter("identifier", identifier);
         query.executeUpdate();
@@ -33,8 +34,20 @@ public class JpaFloodDao implements FloodDao {
 
     @Override
     public void purgeExpiredEvents () {
-        Query query = em.createNamedQuery("FloodEvent.purgeExpired");
-        System.out.println(query.toString());
+        final Query query = em.createNamedQuery("FloodEvent.purgeExpired");
+        // We can't use hibernates default 'CURRENT_TIME' method here as the
+        // saved datetime is calculated from GMT0.
+        query.setParameter("dateNow", DateTime.now());
         query.executeUpdate();
     }
+
+    @Override
+    public long isAllowed (final FloodType eventType, final String identifier) {
+        final Query query = em.createNamedQuery("FloodEvent.isAllowed");
+        query.setParameter("event", eventType);
+        query.setParameter("identifier", identifier);
+        return (Long) query.getSingleResult();
+    }
+
+
 }

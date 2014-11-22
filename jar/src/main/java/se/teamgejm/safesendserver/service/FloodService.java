@@ -20,7 +20,7 @@ public interface FloodService {
      * @param event
      *         the flood event to register.
      */
-    void registerEvent (FloodEvent event);
+    void registerEvent (final FloodEvent event);
 
     /**
      * Registers a flood event.
@@ -30,7 +30,7 @@ public interface FloodService {
      * @param identifier
      *         the flood events identifier, usually an IP address.
      */
-    void registerEvent (FloodType eventType, String identifier);
+    void registerEvent (final FloodType eventType, final String identifier);
 
     /**
      * Registers a flood event.
@@ -43,7 +43,7 @@ public interface FloodService {
      *         the expiration time when the flood event is considered expired
      *         and can be purged. Defaults to now + 1 hour.
      */
-    void registerEvent (FloodType eventType, String identifier, DateTime expiration);
+    void registerEvent (final FloodType eventType, final String identifier, final DateTime expiration);
 
     /**
      * Purges events with given conditions.
@@ -53,7 +53,7 @@ public interface FloodService {
      * @param identifier
      *         the flood events identifier.
      */
-    void purgeEvents (FloodType eventType, String identifier);
+    void purgeEvents (final FloodType eventType, final String identifier);
 
     /**
      * Purges events that has expired in time.
@@ -62,4 +62,20 @@ public interface FloodService {
      * project.
      */
     void purgeExpiredEvents ();
+
+    /**
+     * Checks whether an identifier is allowed to proceed with the specified
+     * event.
+     *
+     * @param eventType
+     *         the flood event type.
+     * @param identifier
+     *         the flood events identifier.
+     * @param threshold
+     *         the maximum number of times each identifier can do this event.
+     *
+     * @return True if the identifier is allowed to proceed. False if they have
+     * exceeded the threshold and should not be allowed to proceed.
+     */
+    boolean isAllowed (final FloodType eventType, final String identifier, final int threshold);
 }

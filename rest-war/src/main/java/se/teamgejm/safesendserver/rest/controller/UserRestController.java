@@ -62,6 +62,8 @@ public class UserRestController {
     /**
      * REST-endpoint for validation user credentials
      *
+     * This method is flood controlled.
+     *
      * @param request
      *         validate credentials request
      *
@@ -70,18 +72,29 @@ public class UserRestController {
     @RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json",
             produces = "application/json")
     public ResponseEntity validateUserCredentials (@Valid @RequestBody ValidateCredentialsRequest body, HttpServletRequest request) {
+        final int ipThreshold = 60;
+        final int userThreshold = 6;
+
         if (body == null || body.getEmail() == null || body.getPassword() == null) {
             return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
 
-        floodService.purgeExpiredEvents();
+        // Check IP-based flood access.
+        if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, request.getRemoteAddr(), ipThreshold)) {
+            return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+        }
+
+        // Check user-IP-based flood access.
+        if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr(), userThreshold)) {
+            return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+        }
 
         if (userService.checkAuthorization(body.getEmail(), body.getPassword())) {
             floodService.purgeEvents(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr());
             return new ResponseEntity<String>("", HttpStatus.OK);
         }
 
-        // Register a failed event on a specific user.
+        // Register a user-IP-based failed event.
         floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr());
 
         // Always register an IP-based failed event.

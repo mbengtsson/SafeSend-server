@@ -19,7 +19,7 @@ public interface FloodDao {
      * @param event
      *         the flood event to register.
      */
-    void registerEvent (FloodEvent event);
+    void registerEvent (final FloodEvent event);
 
     /**
      * Purges events with given conditions.
@@ -29,10 +29,23 @@ public interface FloodDao {
      * @param identifier
      *         the flood events identifier.
      */
-    void purgeEvents (FloodType eventType, String identifier);
+    void purgeEvents (final FloodType eventType, final String identifier);
 
     /**
      * Purges events that has expired in time.
      */
     void purgeExpiredEvents ();
+
+    /**
+     * Calculates the number of entrys in the database with the given
+     * conditions.
+     *
+     * @param eventType
+     *         the flood event type.
+     * @param identifier
+     *         the flood events identifier.
+     *
+     * @return the number of entrys in the database with the given conditions.
+     */
+    long isAllowed (final FloodType eventType, final String identifier);
 }

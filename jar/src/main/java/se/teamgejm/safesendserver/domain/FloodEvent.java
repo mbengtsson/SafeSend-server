@@ -12,10 +12,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "flood")
 @NamedQueries({
-        @NamedQuery(name = "FloodEvent.purgeExpired", query = "DELETE FROM FloodEvent f WHERE f.expiration < CURRENT_TIME()"),
-        @NamedQuery(name = "FloodEvent.purge", query = "DELETE FROM FloodEvent f WHERE f.floodType = :event AND f.identifier = :identifier")
+        @NamedQuery(name = "FloodEvent.purgeExpired", query = "DELETE FROM FloodEvent f WHERE f.expiration < :dateNow"),
+        @NamedQuery(name = "FloodEvent.purge", query = "DELETE FROM FloodEvent f WHERE f.floodType = :event AND f.identifier = :identifier"),
+        @NamedQuery(name = "FloodEvent.isAllowed", query = "SELECT COUNT(f) FROM FloodEvent f WHERE f.floodType = :event AND f.identifier = :identifier")
 })
-public class FloodEvent implements IdHolder {
+public class FloodEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,51 +42,10 @@ public class FloodEvent implements IdHolder {
         // Default constructor.
     }
 
-    public FloodEvent (FloodType floodType, String identifier, DateTime timestamp, DateTime expiration) {
+    public FloodEvent (final FloodType floodType, final String identifier, final DateTime timestamp, final DateTime expiration) {
         this.floodType = floodType;
         this.identifier = identifier;
         this.timestamp = timestamp;
-        this.expiration = expiration;
-    }
-
-    @Override
-    public long getId () {
-        return id;
-    }
-
-    public void setId (long id) {
-        this.id = id;
-    }
-
-    public FloodType getFloodType () {
-        return floodType;
-    }
-
-    public void setFloodType (FloodType floodType) {
-        this.floodType = floodType;
-    }
-
-    public String getIdentifier () {
-        return identifier;
-    }
-
-    public void setIdentifier (String identifier) {
-        this.identifier = identifier;
-    }
-
-    public DateTime getTimestamp () {
-        return timestamp;
-    }
-
-    public void setTimestamp (DateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public DateTime getExpiration () {
-        return expiration;
-    }
-
-    public void setExpiration (DateTime expiration) {
         this.expiration = expiration;
     }
 
