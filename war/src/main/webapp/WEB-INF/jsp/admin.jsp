@@ -18,7 +18,12 @@
 
 <jsp:include page="header.jsp"/>
 <div class="content">
-    <h2>${message}</h2>
+    <h2>Welcome ${displayName}</h2>
+    <h3>Administration controll-center</h3>
+    <br>
+    <a href="<%=request.getContextPath()%>/admin/users.html">User management</a><br>
+    <a href="<%=request.getContextPath()%>/admin/log.html">Show log</a>
+
 </div>
 </body>
 </html>
