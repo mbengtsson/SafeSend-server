@@ -15,6 +15,6 @@ public class IndexController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index() {
 
-		return new ModelAndView("redirect:https://bitbucket.org/teamgejm/server/wiki/Home");
+		return new ModelAndView("redirect:https://bitbucket.org/teamgejm/server/wiki/REST%20API%20Documentation");
 	}
 }
