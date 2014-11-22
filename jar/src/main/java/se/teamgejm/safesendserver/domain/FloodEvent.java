@@ -11,6 +11,10 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "flood")
+@NamedQueries({
+        @NamedQuery(name = "FloodEvent.purgeExpired", query = "DELETE FROM FloodEvent f WHERE f.expiration < CURRENT_TIME()"),
+        @NamedQuery(name = "FloodEvent.purge", query = "DELETE FROM FloodEvent f WHERE f.floodType = :event AND f.identifier = :identifier")
+})
 public class FloodEvent implements IdHolder {
 
     @Id

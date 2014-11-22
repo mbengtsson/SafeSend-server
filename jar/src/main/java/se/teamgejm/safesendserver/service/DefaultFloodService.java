@@ -18,27 +18,29 @@ public class DefaultFloodService implements FloodService {
     private FloodDao floodDao;
 
     @Override
-    public FloodEvent registerEvent (FloodEvent event) {
-        long id = floodDao.registerEvent(event);
-        return getEvent(id);
+    public void registerEvent (FloodEvent event) {
+        floodDao.registerEvent(event);
     }
 
     @Override
-    public FloodEvent registerEvent (FloodType eventType, String identifier) {
+    public void registerEvent (FloodType eventType, String identifier) {
         final FloodEvent event = new FloodEvent(eventType, identifier, DateTime.now(), DateTime.now().plusHours(1));
-        long id = floodDao.registerEvent(event);
-        return getEvent(id);
+        floodDao.registerEvent(event);
     }
 
     @Override
-    public FloodEvent registerEvent (FloodType eventType, String identifier, DateTime expiration) {
+    public void registerEvent (FloodType eventType, String identifier, DateTime expiration) {
         final FloodEvent event = new FloodEvent(eventType, identifier, DateTime.now(), expiration);
-        long id = floodDao.registerEvent(event);
-        return getEvent(id);
+        floodDao.registerEvent(event);
     }
 
     @Override
-    public FloodEvent getEvent (long id) {
-        return floodDao.getEvent(id);
+    public void purgeEvents (FloodType eventType, String identifier) {
+        floodDao.purgeEvents(eventType, identifier);
+    }
+
+    @Override
+    public void purgeExpiredEvents () {
+        floodDao.purgeExpiredEvents();
     }
 }

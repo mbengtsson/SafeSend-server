@@ -70,16 +70,21 @@ public class UserRestController {
     @RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json",
             produces = "application/json")
     public ResponseEntity validateUserCredentials (@Valid @RequestBody ValidateCredentialsRequest body, HttpServletRequest request) {
-
         if (body == null || body.getEmail() == null || body.getPassword() == null) {
             return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
 
+        floodService.purgeExpiredEvents();
+
         if (userService.checkAuthorization(body.getEmail(), body.getPassword())) {
+            floodService.purgeEvents(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr());
             return new ResponseEntity<String>("", HttpStatus.OK);
         }
 
-        // Always register an IP-based failed login event.
+        // Register a failed event on a specific user.
+        floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr());
+
+        // Always register an IP-based failed event.
         floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, request.getRemoteAddr());
 
         return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);

@@ -19,10 +19,8 @@ public interface FloodService {
      *
      * @param event
      *         the flood event to register.
-     *
-     * @return the registered flood event.
      */
-    FloodEvent registerEvent (FloodEvent event);
+    void registerEvent (FloodEvent event);
 
     /**
      * Registers a flood event.
@@ -31,10 +29,8 @@ public interface FloodService {
      *         the flood event type.
      * @param identifier
      *         the flood events identifier, usually an IP address.
-     *
-     * @return the registered flood event.
      */
-    FloodEvent registerEvent (FloodType eventType, String identifier);
+    void registerEvent (FloodType eventType, String identifier);
 
     /**
      * Registers a flood event.
@@ -44,20 +40,26 @@ public interface FloodService {
      * @param identifier
      *         the flood events identifier, usually an IP address.
      * @param expiration
-     *         the expiration time when the flood event is considered outdated
+     *         the expiration time when the flood event is considered expired
      *         and can be purged. Defaults to now + 1 hour.
-     *
-     * @return the registered flood event.
      */
-    FloodEvent registerEvent (FloodType eventType, String identifier, DateTime expiration);
+    void registerEvent (FloodType eventType, String identifier, DateTime expiration);
 
     /**
-     * Gets a registered flood event.
+     * Purges events with given conditions.
      *
-     * @param id
-     *         the id of the flood event to get.
-     *
-     * @return the registered flood event with the given id.
+     * @param eventType
+     *         the flood event type.
+     * @param identifier
+     *         the flood events identifier.
      */
-    FloodEvent getEvent (long id);
+    void purgeEvents (FloodType eventType, String identifier);
+
+    /**
+     * Purges events that has expired in time.
+     *
+     * Note: This should be executed by CRON, but that is out of scope for this
+     * project.
+     */
+    void purgeExpiredEvents ();
 }
