@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.teamgejm.safesendserver.domain.FloodType;
 import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
@@ -11,10 +12,12 @@ import se.teamgejm.safesendserver.rest.model.request.ValidateCredentialsRequest;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
 import se.teamgejm.safesendserver.security.PasswordHasher;
+import se.teamgejm.safesendserver.service.FloodService;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,8 @@ public class UserRestController {
     private UserService userService;
     @Inject
     private LogService logService;
+    @Inject
+    private FloodService floodService;
 
     /**
      * REST-endpoint that returns a list of all users. Requires authorization.
@@ -64,15 +69,18 @@ public class UserRestController {
      */
     @RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json",
             produces = "application/json")
-    public ResponseEntity validateUserCredentials (@Valid @RequestBody ValidateCredentialsRequest request) {
+    public ResponseEntity validateUserCredentials (@Valid @RequestBody ValidateCredentialsRequest body, HttpServletRequest request) {
 
-        if (request == null || request.getEmail() == null || request.getPassword() == null) {
+        if (body == null || body.getEmail() == null || body.getPassword() == null) {
             return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
 
-        if (userService.checkAuthorization(request.getEmail(), request.getPassword())) {
+        if (userService.checkAuthorization(body.getEmail(), body.getPassword())) {
             return new ResponseEntity<String>("", HttpStatus.OK);
         }
+
+        // Always register an IP-based failed login event.
+        floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, request.getRemoteAddr());
 
         return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
     }

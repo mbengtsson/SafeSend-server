@@ -3,20 +3,24 @@ package se.teamgejm.safesendserver.domain;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
  * @author Emil Stjerneman
  */
 @Entity
-public class Flood {
+@Table(name = "flood")
+public class FloodEvent implements IdHolder {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private FloodEvent floodEvent;
+    @Column(name = "event")
+    private FloodType floodType;
 
     @NotNull
     private String identifier;
@@ -29,23 +33,32 @@ public class Flood {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime expiration;
 
-    public Flood () {
-
+    public FloodEvent () {
+        // Default constructor.
     }
 
-    public Flood (FloodEvent floodEvent, String identifier, DateTime timestamp, DateTime expiration) {
-        this.floodEvent = floodEvent;
+    public FloodEvent (FloodType floodType, String identifier, DateTime timestamp, DateTime expiration) {
+        this.floodType = floodType;
         this.identifier = identifier;
         this.timestamp = timestamp;
         this.expiration = expiration;
     }
 
-    public FloodEvent getFloodEvent () {
-        return floodEvent;
+    @Override
+    public long getId () {
+        return id;
     }
 
-    public void setFloodEvent (FloodEvent floodEvent) {
-        this.floodEvent = floodEvent;
+    public void setId (long id) {
+        this.id = id;
+    }
+
+    public FloodType getFloodType () {
+        return floodType;
+    }
+
+    public void setFloodType (FloodType floodType) {
+        this.floodType = floodType;
     }
 
     public String getIdentifier () {
@@ -81,18 +94,18 @@ public class Flood {
             return false;
         }
 
-        Flood flood = (Flood) o;
+        FloodEvent that = (FloodEvent) o;
 
-        if (!expiration.equals(flood.expiration)) {
+        if (!expiration.equals(that.expiration)) {
             return false;
         }
-        if (floodEvent != flood.floodEvent) {
+        if (floodType != that.floodType) {
             return false;
         }
-        if (!identifier.equals(flood.identifier)) {
+        if (!identifier.equals(that.identifier)) {
             return false;
         }
-        if (!timestamp.equals(flood.timestamp)) {
+        if (!timestamp.equals(that.timestamp)) {
             return false;
         }
 
@@ -101,14 +114,21 @@ public class Flood {
 
     @Override
     public int hashCode () {
-        int result = floodEvent.hashCode();
+        int result = floodType.hashCode();
         result = 31 * result + identifier.hashCode();
         result = 31 * result + timestamp.hashCode();
         result = 31 * result + expiration.hashCode();
         return result;
     }
 
-    public enum FloodEvent {
-        FAILED_VALIDATE_CREDENTIALS,
+    @Override
+    public String toString () {
+        return "FloodEvent{" +
+                "id=" + id +
+                ", floodType=" + floodType +
+                ", identifier='" + identifier + '\'' +
+                ", timestamp=" + timestamp +
+                ", expiration=" + expiration +
+                '}';
     }
 }
