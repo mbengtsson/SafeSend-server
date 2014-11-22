@@ -11,6 +11,17 @@
 		</param-value>
 	</context-param>
 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Rest</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
