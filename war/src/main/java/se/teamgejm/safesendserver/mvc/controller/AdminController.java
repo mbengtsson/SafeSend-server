@@ -5,11 +5,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.mvc.bean.LogBean;
+import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Marcus Bengtsson
@@ -19,6 +24,9 @@ public class AdminController {
 
 	@Inject
 	UserService userService;
+
+	@Inject
+	LogService logService;
 
 	@RequestMapping(value = "/admin.html", method = RequestMethod.GET)
 	public ModelAndView adminPage(Principal principal) {
@@ -36,7 +44,16 @@ public class AdminController {
 	@RequestMapping(value = "/admin/log.html", method = RequestMethod.GET)
 	public ModelAndView log() {
 
-		return null;
+		List<LogBean> log = new ArrayList<LogBean>();
+		for (LogEntry logEntry : logService.getAllLogEntrys()) {
+			log.add(new LogBean(logEntry.getActorId(), logEntry.getTargetId(), logEntry.getObjectType().toString(),
+					logEntry.getVerb().toString(), logEntry.getTimeStamp()));
+		}
+
+		ModelAndView mav = new ModelAndView("log");
+		mav.addObject("log", log);
+
+		return mav;
 	}
 
 	@RequestMapping(value = "/admin/users.html", method = RequestMethod.GET)
@@ -50,6 +67,5 @@ public class AdminController {
 
 		return null;
 	}
-
 
 }

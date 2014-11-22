@@ -23,6 +23,9 @@
 	<jee:local-slsb id="messageService"
 	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultMessageService"
 	                business-interface="se.teamgejm.safesendserver.service.MessageService"/>
+	<jee:local-slsb id="logService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultLogService"
+	                business-interface="se.teamgejm.safesendserver.service.LogService"/>
 
 
 </beans>

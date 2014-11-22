@@ -23,6 +23,10 @@
 
     <a href="<%=request.getContextPath()%>/user.html">User page</a><br>
     <a href="<%=request.getContextPath()%>/admin.html">Administration page</a>
+    <br>
+    <br>
+    <a href="<%=request.getContextPath()%>/api/">API documentation</a>
+
 
 </div>
 </body>
