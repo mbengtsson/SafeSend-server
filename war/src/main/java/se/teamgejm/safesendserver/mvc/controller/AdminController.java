@@ -8,13 +8,14 @@ import org.springframework.web.servlet.ModelAndView;
 import se.teamgejm.safesendserver.domain.LogEntry;
 import se.teamgejm.safesendserver.domain.User;
 import se.teamgejm.safesendserver.mvc.bean.LogBean;
+import se.teamgejm.safesendserver.mvc.bean.UserBean;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Marcus Bengtsson
@@ -59,13 +60,54 @@ public class AdminController {
 	@RequestMapping(value = "/admin/users.html", method = RequestMethod.GET)
 	public ModelAndView users() {
 
-		return null;
+		List<UserBean> users = new ArrayList<UserBean>();
+		for (User user : userService.getAllUsers()) {
+			users.add(new UserBean(user.getId(), user.getEmail(), user.getDisplayName(), null, user.getRole().toString()));
+		}
+
+		ModelAndView mav = new ModelAndView("users");
+		mav.addObject("users", users);
+
+		return mav;
 	}
 
 	@RequestMapping(value = "/admin/users/{id}.html", method = RequestMethod.GET)
 	public ModelAndView userDetails(@PathVariable long id) {
 
-		return null;
+		User user = userService.getUser(id);
+		UserBean userBean = new UserBean(user.getId(), user.getEmail(), user.getDisplayName(), user.getPublicKey(),
+				user.getRole().toString());
+		User.Role[] roles = User.Role.values();
+
+		Set<LogEntry> logEntries = new HashSet<LogEntry>(logService.getLogEntrysByActorID(id));
+		logEntries.addAll(logService.getLogEntrysByTargetID(id));
+
+		List<LogBean> log = new ArrayList<LogBean>();
+		for (LogEntry logEntry : logEntries) {
+			log.add(new LogBean(logEntry.getActorId(), logEntry.getTargetId(), logEntry.getObjectType().toString(),
+					logEntry.getVerb().toString(), logEntry.getTimeStamp()));
+		}
+		Collections.sort(log);
+
+		ModelAndView mav = new ModelAndView("userdetails");
+		mav.addObject("user", userBean);
+		mav.addObject("roles", roles);
+		mav.addObject("log", log);
+		return mav;
+	}
+
+	@RequestMapping(value = "/admin/users/{id}.html", method = RequestMethod.POST)
+	public ModelAndView userDetailsSubmit(@Valid UserBean bean) {
+
+		User user = userService.getUser(bean.getId());
+		for (User.Role role : User.Role.values()) {
+			if (bean.getRole().equalsIgnoreCase(role.name())) {
+				user.setRole(role);
+			}
+		}
+		userService.updateUser(user);
+
+		return new ModelAndView("redirect:/admin/users.html");
 	}
 
 }

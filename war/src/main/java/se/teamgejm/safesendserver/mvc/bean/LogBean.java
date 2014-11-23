@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 /**
  * Created by Marcus Bengtsson on 2014-11-22.
  */
-public class LogBean {
+public class LogBean implements Comparable<LogBean> {
 
 	private long actorId;
 	private long targetId;
@@ -67,5 +67,12 @@ public class LogBean {
 
 	public void setTimeStamp(DateTime timeStamp) {
 		this.timeStamp = timeFormatter.print(timeStamp);
+	}
+
+	@Override
+	public int compareTo(LogBean o) {
+
+		return timeFormatter.parseDateTime(timeStamp).compareTo(timeFormatter.parseDateTime(o.timeStamp));
+		
 	}
 }
