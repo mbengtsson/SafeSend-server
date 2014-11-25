@@ -1,6 +1,7 @@
-package se.teamgejm.safesendserver.domain;
+package se.teamgejm.safesendserver.domain.user;
 
 import org.hibernate.validator.constraints.NotBlank;
+import se.teamgejm.safesendserver.domain.IdHolder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -129,8 +130,4 @@ public class User implements IdHolder, Comparable<User> {
 		return email.hashCode();
 	}
 
-	public enum Role {
-		USER,
-		ADMIN;
-	}
 }

@@ -1,8 +1,10 @@
-package se.teamgejm.safesendserver.domain;
+package se.teamgejm.safesendserver.domain.message;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
 import org.joda.time.DateTime;
+import se.teamgejm.safesendserver.domain.IdHolder;
+import se.teamgejm.safesendserver.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

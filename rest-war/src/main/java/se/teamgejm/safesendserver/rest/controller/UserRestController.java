@@ -4,9 +4,11 @@ import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.teamgejm.safesendserver.domain.FloodType;
-import se.teamgejm.safesendserver.domain.LogEntry;
-import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.domain.floodevent.FloodType;
+import se.teamgejm.safesendserver.domain.logentry.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.ObjectType;
+import se.teamgejm.safesendserver.domain.logentry.Verb;
+import se.teamgejm.safesendserver.domain.user.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
 import se.teamgejm.safesendserver.rest.model.request.ValidateCredentialsRequest;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
@@ -128,7 +130,7 @@ public class UserRestController {
 
 		if (user != null) {
 			logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
-					LogEntry.ObjectType.USER, LogEntry.Verb.CREATE, DateTime.now()));
+					ObjectType.USER, Verb.CREATE, DateTime.now()));
 		} else {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}

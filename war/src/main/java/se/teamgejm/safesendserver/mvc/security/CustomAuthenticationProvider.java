@@ -5,7 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.domain.user.User;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;

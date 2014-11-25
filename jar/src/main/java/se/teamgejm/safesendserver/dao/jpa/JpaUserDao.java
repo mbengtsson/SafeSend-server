@@ -1,7 +1,7 @@
 package se.teamgejm.safesendserver.dao.jpa;
 
 import se.teamgejm.safesendserver.dao.UserDao;
-import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.domain.user.User;
 
 import javax.ejb.Stateless;
 import javax.persistence.Query;

@@ -1,6 +1,6 @@
 package se.teamgejm.safesendserver.dao;
 
-import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.domain.user.User;
 
 import javax.ejb.Local;
 import java.util.Collection;

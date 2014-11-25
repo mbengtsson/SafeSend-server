@@ -1,7 +1,8 @@
-package se.teamgejm.safesendserver.domain;
+package se.teamgejm.safesendserver.domain.logentry;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import se.teamgejm.safesendserver.domain.IdHolder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -157,17 +158,6 @@ public class LogEntry implements IdHolder, Comparable<LogEntry> {
 		result = 31 * result + verb.hashCode();
 		result = 31 * result + timeStamp.hashCode();
 		return result;
-	}
-
-	public enum ObjectType {
-		TEXT_MESSAGE,
-		USER;
-	}
-
-	public enum Verb {
-		SEND,
-		RECEIVE,
-		CREATE;
 	}
 
 }

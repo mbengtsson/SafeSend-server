@@ -1,7 +1,9 @@
 package se.teamgejm.safesendserver.service;
 
 import se.teamgejm.safesendserver.dao.LogDao;
-import se.teamgejm.safesendserver.domain.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.ObjectType;
+import se.teamgejm.safesendserver.domain.logentry.Verb;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -54,12 +56,12 @@ public class DefaultLogService implements LogService {
 	}
 
 	@Override
-	public Collection<LogEntry> getLogEntrysByObjectType(LogEntry.ObjectType objectType) {
+	public Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType) {
 		return logDao.getLogEntrysByObjectType(objectType);
 	}
 
 	@Override
-	public Collection<LogEntry> getLogEntrysByVerb(LogEntry.Verb verb) {
+	public Collection<LogEntry> getLogEntrysByVerb(Verb verb) {
 		return logDao.getLogEntrysByVerb(verb);
 	}
 }

@@ -1,7 +1,9 @@
 package se.teamgejm.safesendserver.dao.jpa;
 
 import se.teamgejm.safesendserver.dao.LogDao;
-import se.teamgejm.safesendserver.domain.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.ObjectType;
+import se.teamgejm.safesendserver.domain.logentry.Verb;
 
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -37,7 +39,7 @@ public class JpaLogDao extends JpaBaseDao<LogEntry> implements LogDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<LogEntry> getLogEntrysByObjectType(LogEntry.ObjectType objectType) {
+	public Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType) {
 		Query query = em.createNamedQuery("getLogEntrysByObjectType");
 		query.setParameter("objectType", objectType);
 		return query.getResultList();
@@ -45,7 +47,7 @@ public class JpaLogDao extends JpaBaseDao<LogEntry> implements LogDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<LogEntry> getLogEntrysByVerb(LogEntry.Verb verb) {
+	public Collection<LogEntry> getLogEntrysByVerb(Verb verb) {
 		Query query = em.createNamedQuery("getLogEntrysByVerb");
 		query.setParameter("verb", verb);
 		return query.getResultList();

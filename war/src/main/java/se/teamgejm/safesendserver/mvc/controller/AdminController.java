@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import se.teamgejm.safesendserver.domain.LogEntry;
-import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.domain.logentry.LogEntry;
+import se.teamgejm.safesendserver.domain.user.Role;
+import se.teamgejm.safesendserver.domain.user.User;
 import se.teamgejm.safesendserver.mvc.bean.LogBean;
 import se.teamgejm.safesendserver.mvc.bean.UserBean;
 import se.teamgejm.safesendserver.service.LogService;
@@ -77,7 +78,7 @@ public class AdminController {
 		User user = userService.getUser(id);
 		UserBean userBean = new UserBean(user.getId(), user.getEmail(), user.getDisplayName(), user.getPublicKey(),
 				user.getRole().toString());
-		User.Role[] roles = User.Role.values();
+		Role[] roles = Role.values();
 
 		Set<LogEntry> logEntries = new HashSet<LogEntry>(logService.getLogEntrysByActorID(id));
 		logEntries.addAll(logService.getLogEntrysByTargetID(id));
@@ -100,7 +101,7 @@ public class AdminController {
 	public ModelAndView userDetailsSubmit(@Valid UserBean bean) {
 
 		User user = userService.getUser(bean.getId());
-		for (User.Role role : User.Role.values()) {
+		for (Role role : Role.values()) {
 			if (bean.getRole().equalsIgnoreCase(role.name())) {
 				user.setRole(role);
 			}

@@ -4,9 +4,11 @@ import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.teamgejm.safesendserver.domain.LogEntry;
-import se.teamgejm.safesendserver.domain.Message;
-import se.teamgejm.safesendserver.domain.User;
+import se.teamgejm.safesendserver.domain.logentry.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.ObjectType;
+import se.teamgejm.safesendserver.domain.logentry.Verb;
+import se.teamgejm.safesendserver.domain.message.Message;
+import se.teamgejm.safesendserver.domain.user.User;
 import se.teamgejm.safesendserver.rest.model.request.SendMessageRequest;
 import se.teamgejm.safesendserver.rest.model.response.NewMessagesResponse;
 import se.teamgejm.safesendserver.rest.model.response.ReceiveMessageResponse;
@@ -66,7 +68,7 @@ public class MessageRestController {
 		messageService.createMessage(message);
 
 		logService.createLogEntry(new LogEntry(authorizedUser.getId(), request.getReceiverId(),
-				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.SEND, DateTime.now()));
+				ObjectType.TEXT_MESSAGE, Verb.SEND, DateTime.now()));
 
 		return new ResponseEntity<String>("", HttpStatus.OK);
 	}
@@ -97,7 +99,7 @@ public class MessageRestController {
 		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
 				message.getSender().getDisplayName());
 		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
-				LogEntry.ObjectType.TEXT_MESSAGE, LogEntry.Verb.RECEIVE, DateTime.now()));
+				ObjectType.TEXT_MESSAGE, Verb.RECEIVE, DateTime.now()));
 
 		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender,
 				message.getSender().getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()),

@@ -1,6 +1,8 @@
 package se.teamgejm.safesendserver.service;
 
-import se.teamgejm.safesendserver.domain.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.LogEntry;
+import se.teamgejm.safesendserver.domain.logentry.ObjectType;
+import se.teamgejm.safesendserver.domain.logentry.Verb;
 
 import javax.ejb.Local;
 import java.util.Collection;
@@ -25,7 +27,7 @@ public interface LogService {
 
 	Collection<LogEntry> getLogEntrysByTargetID(long targetId);
 
-	Collection<LogEntry> getLogEntrysByObjectType(LogEntry.ObjectType objectType);
+	Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType);
 
-	Collection<LogEntry> getLogEntrysByVerb(LogEntry.Verb verb);
+	Collection<LogEntry> getLogEntrysByVerb(Verb verb);
 }

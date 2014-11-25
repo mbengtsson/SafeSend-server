@@ -73,6 +73,6 @@ public class LogBean implements Comparable<LogBean> {
 	public int compareTo(LogBean o) {
 
 		return timeFormatter.parseDateTime(timeStamp).compareTo(timeFormatter.parseDateTime(o.timeStamp));
-		
+
 	}
 }
