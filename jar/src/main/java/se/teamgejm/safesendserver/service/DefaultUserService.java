@@ -111,13 +111,6 @@ public class DefaultUserService implements UserService {
 
 	private boolean validateUserData(User user) {
 
-		if (!user.getEmail().matches(EMAIL_PATTERN)) {
-			System.out.println("Email missmatch");
-		}
-		if (!user.getDisplayName().matches(DISPLAYNAME_PATTERN)) {
-			System.out.println("Displayname mismatch");
-		}
-
 		return user.getEmail().matches(EMAIL_PATTERN) && user.getDisplayName().matches(DISPLAYNAME_PATTERN);
 	}
 }
