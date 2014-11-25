@@ -29,6 +29,9 @@
 	<jee:local-slsb id="passwordHasher"
 	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultPasswordHasher"
 	                business-interface="se.teamgejm.safesendserver.security.PasswordHasher"/>
+	<jee:local-slsb id="floodService"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultFloodService"
+	                business-interface="se.teamgejm.safesendserver.service.FloodService"/>
 
 
 </beans>

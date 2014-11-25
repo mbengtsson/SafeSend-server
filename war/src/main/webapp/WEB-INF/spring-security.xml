@@ -29,14 +29,15 @@
 		<csrf/>
 	</http>
 
+
 	<authentication-manager>
 		<authentication-provider user-service-ref="userDetailsService">
 			<password-encoder ref="passwordEncoder"/>
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="userDetailsService" class="se.teamgejm.safesendserver.mvc.security.CustomAuthenticationProvider"/>
 	<beans:bean id="passwordEncoder" class="se.teamgejm.safesendserver.mvc.security.CustomPasswordEncoder"/>
+	<beans:bean id="userDetailsService" class="se.teamgejm.safesendserver.mvc.security.CustomUserDetailsService"/>
 
 </beans:beans>
 
