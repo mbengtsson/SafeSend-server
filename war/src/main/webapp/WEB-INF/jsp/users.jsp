@@ -30,10 +30,10 @@
         </tr>
         <c:forEach items="${users}" var="user">
             <tr>
-                <td>${user.id}</td>
-                <td>${user.email}</td>
-                <td>${user.displayName}</td>
-                <td>${user.role}</td>
+                <td><c:out value="${user.id}"/></td>
+                <td><c:out value="${user.email}"/></td>
+                <td><c:out value="${user.displayName}"/></td>
+                <td><c:out value="${user.role}"/></td>
                 <td><a href="<%=request.getContextPath()%>/admin/users/${user.id}.html">details/edit</a></td>
             </tr>
         </c:forEach>

@@ -18,22 +18,22 @@
 <jsp:include page="header.jsp"/>
 <div class="content">
     <h2>Administration - user-details</h2>
-    <a href="<%=request.getContextPath()%>/admin.html">Back</a>
+    <a href="<%=request.getContextPath()%>/admin/users.html">Back</a>
     <br>
     <br>
     <form:form commandName="user">
         <table class="list">
             <tr>
                 <th>Id:&nbsp;</th>
-                <td>${user.id}</td>
+                <td><c:out value="${user.id}"/></td>
             </tr>
             <tr>
                 <th>Email:&nbsp;</th>
-                <td>${user.email}</td>
+                <td><c:out value="${user.email}"/></td>
             </tr>
             <tr>
                 <th>Display-name:&nbsp;</th>
-                <td>${user.displayName}</td>
+                <td><c:out value="${user.displayName}"/></td>
             </tr>
             <tr>
                 <th>Role:&nbsp;</th>
@@ -51,7 +51,7 @@
     <div id="key">
         <h3>Public PGP-Key</h3>
 
-        <pre>${user.publicKey}</pre>
+        <pre><c:out value="${user.publicKey}"/></pre>
     </div>
 
     <table class="list">
@@ -64,11 +64,11 @@
         </tr>
         <c:forEach items="${log}" var="logItem">
             <tr>
-                <td>${logItem.timeStamp}</td>
-                <td>${logItem.verb}</td>
-                <td>${logItem.objectType}</td>
-                <td>${logItem.actorId}</td>
-                <td>${logItem.targetId}</td>
+                <td><c:out value="${logItem.timeStamp}"/></td>
+                <td><c:out value="${logItem.verb}"/></td>
+                <td><c:out value="${logItem.objectType}"/></td>
+                <td><c:out value="${logItem.actorId}"/></td>
+                <td><c:out value="${logItem.targetId}"/></td>
             </tr>
         </c:forEach>
     </table>

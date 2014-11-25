@@ -30,11 +30,11 @@
         </tr>
         <c:forEach items="${log}" var="logItem">
             <tr>
-                <td>${logItem.timeStamp}</td>
-                <td>${logItem.verb}</td>
-                <td>${logItem.objectType}</td>
-                <td>${logItem.actorId}</td>
-                <td>${logItem.targetId}</td>
+                <td><c:out value="${logItem.timeStamp}"/></td>
+                <td><c:out value="${logItem.verb}"/></td>
+                <td><c:out value="${logItem.objectType}"/></td>
+                <td><c:out value="${logItem.actorId}"/></td>
+                <td><c:out value="${logItem.targetId}"/></td>
             </tr>
         </c:forEach>
     </table>

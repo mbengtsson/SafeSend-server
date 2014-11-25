@@ -19,7 +19,7 @@
 <jsp:include page="header.jsp"/>
 <div class="content">
     <h2>Administration control-center</h2>
-    <h3>Welcome ${displayName}</h3>
+    <h3>Welcome <c:out value="${displayName}"/></h3>
     <br>
     <a href="<%=request.getContextPath()%>/admin/users.html">User management</a><br>
     <a href="<%=request.getContextPath()%>/admin/log.html">Show log</a>

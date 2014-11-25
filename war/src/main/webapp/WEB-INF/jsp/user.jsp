@@ -18,11 +18,11 @@
 
 <jsp:include page="header.jsp"/>
 <div class="content">
-    <h2>Welcome ${displayName}</h2>
+    <h2>Welcome <c:out value="${displayName}"/></h2>
 
     <c:choose>
         <c:when test="${not empty messages}">
-            <h3>You have ${messagesLength} new messages</h3>
+            <h3>You have <c:out value="${messagesLength}"/> new messages</h3>
 
             <table class="list">
                 <tr>
@@ -32,9 +32,9 @@
                 </tr>
                 <c:forEach items="${messages}" var="message">
                     <tr>
-                        <td>${message.senderName}</td>
-                        <td>(${message.senderEmail})</td>
-                        <td>${message.time}</td>
+                        <td><c:out value="${message.senderName}"/></td>
+                        <td>(<c:out value="${message.senderEmail}"/>)</td>
+                        <td><c:out value="${message.time}"/></td>
                     </tr>
                 </c:forEach>
             </table>

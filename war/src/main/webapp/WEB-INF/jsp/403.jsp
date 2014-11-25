@@ -26,7 +26,7 @@
         <c:otherwise>
             <h2>Access denied!</h2>
 
-            <h3><i>${username}</i> has insufficient privileges to access this resource</h3>
+            <h3><i><c:out value="${username}"/></i> has insufficient privileges to access this resource</h3>
         </c:otherwise>
     </c:choose>
 </div>

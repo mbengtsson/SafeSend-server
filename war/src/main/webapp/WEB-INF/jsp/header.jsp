@@ -28,7 +28,7 @@
 
             <c:if test="${pageContext.request.userPrincipal.name != null}">
                 <p>
-                        ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
+                    <c:out value="${pageContext.request.userPrincipal.name}"/> | <a href="javascript:formSubmit()"> Logout</a>
                 </p>
             </c:if>
         </sec:authorize>
