@@ -65,8 +65,7 @@ public class UserRestController {
 	 * @param request validate credentials request
 	 * @return 200 if the validation succeed, otherwise 401
 	 */
-	@RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json",
-			produces = "application/json")
+	@RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity validateUserCredentials(@Valid @RequestBody ValidateCredentialsRequest body, HttpServletRequest request) {
 		final int ipThreshold = 60;
 		final int userThreshold = 6;
