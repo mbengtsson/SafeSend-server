@@ -15,86 +15,109 @@ import java.util.Collection;
 @Stateless
 public class DefaultUserService implements UserService {
 
-    private static final String AUTHORIZATION_PATTERN = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\" +
-            ".[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\:.+";
+	private static final String DISPLAYNAME_PATTERN = "[A-Za-z0-9. ]{4,}";
+	private static final String EMAIL_PATTERN = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@" +
+			"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+	private static final String PASSWORD_PATTERN = "{1}.+";
+	private static final String AUTHORIZATION_PATTERN = EMAIL_PATTERN + ":" + PASSWORD_PATTERN;
 
-    private static final String AUTHORIZATION_TYPE = "Basic";
+	private static final String AUTHORIZATION_TYPE = "Basic";
 
-    @Inject
-    private UserDao userDao;
+	@Inject
+	private UserDao userDao;
 
-    @Override
-    public User createUser (User user) {
-        long id = userDao.persist(user);
+	@Override
+	public User createUser(User user) {
 
-        return getUser(id);
-    }
+		if (validateUserData(user)) {
+			long id = userDao.persist(user);
 
-    @Override
-    public void removeUser (User user) {
-        userDao.remove(user);
-    }
+			return getUser(id);
+		} else {
+			return null;
+		}
+	}
 
-    @Override
-    public User getUser (long id) {
-        return userDao.findById(id);
-    }
+	@Override
+	public void removeUser(User user) {
+		userDao.remove(user);
+	}
 
-    @Override
-    public void updateUser (User user) {
-        userDao.update(user);
-    }
+	@Override
+	public User getUser(long id) {
+		return userDao.findById(id);
+	}
 
-    @Override
-    public User getUserByUsername (String username) {
-        return userDao.getUserByEmail(username);
-    }
+	@Override
+	public void updateUser(User user) {
 
-    @Override
-    public Collection<User> getAllUsers () {
-        return userDao.getAllUsers();
-    }
+		if (validateUserData(user)) {
+			userDao.update(user);
+		}
+	}
 
-    @Override
-    public User getAuthorizedUser (String authorization) {
-        if (authorization.substring(0, 5).equals(AUTHORIZATION_TYPE)) {
+	@Override
+	public User getUserByUsername(String username) {
+		return userDao.getUserByEmail(username);
+	}
 
-            authorization = new String(Base64.decodeBase64(authorization.substring(5).getBytes()));
+	@Override
+	public Collection<User> getAllUsers() {
+		return userDao.getAllUsers();
+	}
 
-            if (authorization != null && authorization.matches(AUTHORIZATION_PATTERN)) {
+	@Override
+	public User getAuthorizedUser(String authorization) {
+		if (authorization.substring(0, 5).equals(AUTHORIZATION_TYPE)) {
 
-                String[] parts = authorization.split(":");
-                String username = parts[0];
-                String password = parts[1];
-                User user = getUserByUsername(username);
+			authorization = new String(Base64.decodeBase64(authorization.substring(5).getBytes()));
 
-                if (user != null) {
-                    String correctHash = user.getPassword();
-                    PasswordHasher passHash = new PasswordHasher();
+			if (authorization != null && authorization.matches(AUTHORIZATION_PATTERN)) {
 
-                    return passHash.validatePassword(password, correctHash) ? user : null;
-                }
-            }
-        }
-        return null;
-    }
+				String[] parts = authorization.split(":");
+				String username = parts[0];
+				String password = parts[1];
+				User user = getUserByUsername(username);
 
-    @Override
-    public boolean checkAuthorization (String authorization) {
-        return getAuthorizedUser(authorization) != null;
-    }
+				if (user != null) {
+					String correctHash = user.getPassword();
+					PasswordHasher passHash = new PasswordHasher();
 
-    @Override
-    public boolean checkAuthorization (String email, String password) {
-        User user = getUserByUsername(email);
+					return passHash.validatePassword(password, correctHash) ? user : null;
+				}
+			}
+		}
+		return null;
+	}
 
-        if (user != null) {
-            String correctHash = user.getPassword();
-            PasswordHasher passHash = new PasswordHasher();
+	@Override
+	public boolean checkAuthorization(String authorization) {
+		return getAuthorizedUser(authorization) != null;
+	}
 
-            return passHash.validatePassword(password, correctHash) ? true : false;
-        }
+	@Override
+	public boolean checkAuthorization(String email, String password) {
+		User user = getUserByUsername(email);
 
-        return false;
-    }
+		if (user != null) {
+			String correctHash = user.getPassword();
+			PasswordHasher passHash = new PasswordHasher();
+
+			return passHash.validatePassword(password, correctHash) ? true : false;
+		}
+
+		return false;
+	}
+
+	private boolean validateUserData(User user) {
+
+		if (!user.getEmail().matches(EMAIL_PATTERN)) {
+			System.out.println("Email missmatch");
+		}
+		if (!user.getDisplayName().matches(DISPLAYNAME_PATTERN)) {
+			System.out.println("Displayname mismatch");
+		}
+
+		return user.getEmail().matches(EMAIL_PATTERN) && user.getDisplayName().matches(DISPLAYNAME_PATTERN);
+	}
 }
