@@ -26,6 +26,9 @@
 	<jee:local-slsb id="logService"
 	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultLogService"
 	                business-interface="se.teamgejm.safesendserver.service.LogService"/>
+	<jee:local-slsb id="passwordHasher"
+	                jndi-name="java:global/safesendserver/safesendserver-jar-1.0-SNAPSHOT/DefaultPasswordHasher"
+	                business-interface="se.teamgejm.safesendserver.security.PasswordHasher"/>
 
 
 </beans>

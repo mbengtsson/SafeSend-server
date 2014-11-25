@@ -3,12 +3,15 @@ package se.teamgejm.safesendserver.mvc.security;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.teamgejm.safesendserver.security.PasswordHasher;
 
+import javax.inject.Inject;
+
 /**
  * Created by Marcus Bengtsson on 2014-11-20.
  */
 public class CustomPasswordEncoder implements PasswordEncoder {
 
-	PasswordHasher passHash = new PasswordHasher();
+	@Inject
+	PasswordHasher passHash;
 
 	@Override
 	public String encode(CharSequence rawPassword) {

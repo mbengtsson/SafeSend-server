@@ -36,6 +36,8 @@ public class UserRestController {
 	private LogService logService;
 	@Inject
 	private FloodService floodService;
+	@Inject
+	private PasswordHasher passHash;
 
 	/**
 	 * REST-endpoint that returns a list of all users. Requires authorization.
@@ -117,7 +119,6 @@ public class UserRestController {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
-		PasswordHasher passHash = new PasswordHasher();
 		User user = new User(request.getEmail(), request.getDisplayName(), passHash.generateHash(request
 				.getPassword()),
 				request.getPublicKey());

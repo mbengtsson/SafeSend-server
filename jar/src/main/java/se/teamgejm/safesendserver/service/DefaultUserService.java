@@ -26,6 +26,9 @@ public class DefaultUserService implements UserService {
 	@Inject
 	private UserDao userDao;
 
+	@Inject
+	private PasswordHasher passHash;
+
 	@Override
 	public User createUser(User user) {
 
@@ -81,7 +84,6 @@ public class DefaultUserService implements UserService {
 
 				if (user != null) {
 					String correctHash = user.getPassword();
-					PasswordHasher passHash = new PasswordHasher();
 
 					return passHash.validatePassword(password, correctHash) ? user : null;
 				}
@@ -101,7 +103,6 @@ public class DefaultUserService implements UserService {
 
 		if (user != null) {
 			String correctHash = user.getPassword();
-			PasswordHasher passHash = new PasswordHasher();
 
 			return passHash.validatePassword(password, correctHash) ? true : false;
 		}
