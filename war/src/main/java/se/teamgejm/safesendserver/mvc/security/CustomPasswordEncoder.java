@@ -11,7 +11,7 @@ import javax.inject.Inject;
 public class CustomPasswordEncoder implements PasswordEncoder {
 
 	@Inject
-	PasswordHasher passHash;
+	private PasswordHasher passHash;
 
 	@Override
 	public String encode(CharSequence rawPassword) {

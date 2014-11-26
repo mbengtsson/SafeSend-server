@@ -15,7 +15,7 @@ import javax.inject.Inject;
 public class AuthenticationFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
 	@Inject
-	FloodService floodService;
+	private FloodService floodService;
 
 	@Override
 	public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {

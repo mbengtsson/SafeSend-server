@@ -22,10 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	final int userThreshold = 6;
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@Inject
-	FloodService floodService;
+	private FloodService floodService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

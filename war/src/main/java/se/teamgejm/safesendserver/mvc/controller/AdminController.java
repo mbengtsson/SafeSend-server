@@ -25,10 +25,10 @@ import java.util.*;
 public class AdminController {
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@Inject
-	LogService logService;
+	private LogService logService;
 
 	@RequestMapping(value = "/admin.html", method = RequestMethod.GET)
 	public ModelAndView adminPage(Principal principal) {

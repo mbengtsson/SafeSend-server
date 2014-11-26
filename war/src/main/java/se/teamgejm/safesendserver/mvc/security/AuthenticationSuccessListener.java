@@ -15,7 +15,7 @@ import javax.inject.Inject;
 public class AuthenticationSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
 	@Inject
-	FloodService floodService;
+	private FloodService floodService;
 
 	@Override
 	public void onApplicationEvent(AuthenticationSuccessEvent event) {

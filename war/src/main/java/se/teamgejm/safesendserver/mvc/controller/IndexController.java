@@ -14,10 +14,10 @@ public class IndexController {
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
 	public ModelAndView defaultPage() {
 
-		ModelAndView mav = new ModelAndView();
+		ModelAndView mav = new ModelAndView("index");
 		mav.addObject("title", "Safe-send");
 		mav.addObject("message", "Welcome to safe-send, your encrypted messaging service!");
-		mav.setViewName("index");
+
 		return mav;
 
 	}

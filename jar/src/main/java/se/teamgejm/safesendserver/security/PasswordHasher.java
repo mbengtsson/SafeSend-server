@@ -10,8 +10,8 @@ import javax.ejb.*;
 public interface PasswordHasher {
 
 	@Lock(LockType.READ)
-	public String generateHash(String password);
+	String generateHash(String password);
 
 	@Lock(LockType.READ)
-	public boolean validatePassword(String password, String correctHash);
+	boolean validatePassword(String password, String correctHash);
 }

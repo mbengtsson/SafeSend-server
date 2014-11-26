@@ -23,10 +23,10 @@ import java.util.List;
 public class UserController {
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@Inject
-	MessageService messageService;
+	private MessageService messageService;
 
 	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
 	public ModelAndView userPage(Principal principal) {
