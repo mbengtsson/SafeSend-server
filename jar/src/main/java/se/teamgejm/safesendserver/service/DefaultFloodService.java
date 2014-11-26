@@ -9,6 +9,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
+ * Default implementation of the FloodService interface
+ *
  * @author Emil Stjerneman
  */
 @Stateless

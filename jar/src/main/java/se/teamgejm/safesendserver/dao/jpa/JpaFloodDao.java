@@ -11,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
+ * JPA implementation of the FloodDao interface
+ *
  * @author Emil Stjerneman
  */
 @Stateless

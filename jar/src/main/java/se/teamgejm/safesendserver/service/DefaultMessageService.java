@@ -9,7 +9,9 @@ import javax.inject.Inject;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * Default implementation of the MessageService interface
+ *
+ * @author Marcus Bengtsson
  */
 @Stateless
 public class DefaultMessageService implements MessageService {

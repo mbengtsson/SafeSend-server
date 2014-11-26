@@ -3,7 +3,9 @@ package se.teamgejm.safesendserver.dao;
 import se.teamgejm.safesendserver.domain.IdHolder;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * Generic CRUD methods that can be extended by other data access object interfaces
+ *
+ * @author Marcus Bengtsson
  */
 public interface BaseDao<E extends IdHolder> {
 

@@ -10,7 +10,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * JPA Entity used to hold a message together with the sender and receiver.
+ *
+ * @author Marcus Bengtsson
  */
 
 @Entity

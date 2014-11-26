@@ -6,7 +6,9 @@ import javax.ejb.Local;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * User service to handle users
+ *
+ * @author Marcus Bengtsson
  */
 @Local
 public interface UserService {

@@ -7,6 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
+ * JPA Entity used to hold a failed authorization attempt together with timestamp for flood-control to avoid brute
+ * force attacks on sensetive endpoints
+ *
  * @author Emil Stjerneman
  */
 @Entity

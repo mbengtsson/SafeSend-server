@@ -9,7 +9,9 @@ import javax.persistence.Query;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * JPA implementation of the MessageDao interface
+ *
+ * @author Marcus Bengtsson
  */
 @Stateless
 public class JpaMessageDao extends JpaBaseDao<Message> implements MessageDao {

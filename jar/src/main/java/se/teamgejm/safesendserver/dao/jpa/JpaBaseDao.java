@@ -8,14 +8,16 @@ import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * JPA implementation of the BaseDao, needs to be extended by any data access object that uses BaseDao for CRUD
+ *
+ * @author Marcus Bengtsson
  */
-public abstract class JpaBaseDao<E extends IdHolder> implements BaseDao<E> {
 
-	private Class<E> entityClass;
+public abstract class JpaBaseDao<E extends IdHolder> implements BaseDao<E> {
 
 	@PersistenceContext
 	protected EntityManager em;
+	private Class<E> entityClass;
 
 	@SuppressWarnings("unchecked")
 	public JpaBaseDao() {

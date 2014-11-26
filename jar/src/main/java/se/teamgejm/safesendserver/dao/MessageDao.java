@@ -7,7 +7,9 @@ import javax.ejb.Local;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * Message Dao to handle message entities in the database
+ *
+ * @author Marcus Bengtsson
  */
 @Local
 public interface MessageDao extends BaseDao<Message> {

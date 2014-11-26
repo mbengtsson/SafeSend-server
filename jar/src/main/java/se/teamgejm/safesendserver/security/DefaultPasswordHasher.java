@@ -10,10 +10,10 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * Class used to create salted PBKDF2 hashes of passwords and to validate them.
- * The password-validation compares the password hashes in length-constant time to prevent timing attacks
- * <p/>
- * Created by Marcus Bengtsson on 2014-11-14.
+ * PBKDF implementation of PasswordHasher interface, used to create salted PBKDF2 hashes of passwords and to validate
+ * them. The password-validation compares the password hashes in "length-constant" time to prevent timing attacks
+ *
+ * @author Marcus Bengtsson
  */
 @Singleton
 @Startup
@@ -113,6 +113,13 @@ public class DefaultPasswordHasher implements PasswordHasher {
 		return bytes;
 	}
 
+	/**
+	 * Compares two byte-arrays "length-constant" time.
+	 *
+	 * @param hash1 byte-array
+	 * @param hash2 byte-array
+	 * @return true if equal
+	 */
 	private boolean slowHashEquals(byte[] hash1, byte[] hash2) {
 
 		int diff = hash1.length ^ hash2.length;

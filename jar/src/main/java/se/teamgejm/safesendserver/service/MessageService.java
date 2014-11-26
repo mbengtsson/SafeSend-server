@@ -7,7 +7,9 @@ import javax.ejb.Local;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * Message service to handle messages
+ *
+ * @author Marcus Bengtsson
  */
 @Local
 public interface MessageService {

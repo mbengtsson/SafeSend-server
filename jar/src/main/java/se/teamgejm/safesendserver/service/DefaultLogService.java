@@ -10,7 +10,9 @@ import javax.inject.Inject;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * Default implementation of the LogService interface
+ *
+ * @author Marcus Bengtsson
  */
 @Stateless
 public class DefaultLogService implements LogService {

@@ -8,7 +8,9 @@ import javax.ejb.Local;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * Log Dao to handle log-entry entities in the database
+ *
+ * @author Marcus Bengtsson
  */
 @Local
 public interface LogDao extends BaseDao<LogEntry> {

@@ -3,7 +3,9 @@ package se.teamgejm.safesendserver.security;
 import javax.ejb.*;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-25.
+ * Implementations of this interface are used to generate password hashes and validate passwords aginst a hash
+ *
+ * @author Marcus Bengtsson
  */
 @Local
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)

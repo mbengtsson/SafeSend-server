@@ -9,7 +9,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * JPA implementation of the UserDao interface
+ *
+ * @author Marcus Bengtsson
  */
 @Stateless
 public class JpaUserDao extends JpaBaseDao<User> implements UserDao {

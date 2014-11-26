@@ -10,7 +10,9 @@ import javax.persistence.Query;
 import java.util.Collection;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * JPA implementation of the LogDao interface
+ *
+ * @author Marcus Bengtsson
  */
 @Stateless
 public class JpaLogDao extends JpaBaseDao<LogEntry> implements LogDao {
