@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
  * Created by Marcus Bengtsson on 2014-11-13.
  */
 @Entity
+@Table(name = "users")
 @NamedQuery(name = "getUserByEmail", query = "select u from User u where u.email = :email")
 public class User implements IdHolder, Comparable<User> {
 

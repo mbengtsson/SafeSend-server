@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
+@Table(name = "log")
 @NamedQueries({@NamedQuery(name = "getLogEntrysByActorID", query = "select l from LogEntry l where l.actorId = :actorId"),
 		@NamedQuery(name = "getLogEntrysByTargetID", query = "select l from LogEntry l where l.targetId = :targetId"),
 		@NamedQuery(name = "getLogEntrysByObjectType", query = "select l from LogEntry l where l.objectType = :objectType"),

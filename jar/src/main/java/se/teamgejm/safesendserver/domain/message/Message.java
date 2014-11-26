@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
+@Table(name = "messages")
 @NamedQuery(name = "getMessagesByReciever", query = "select m from Message m where m.reciever = :receiver")
 public class Message implements IdHolder, Comparable<Message> {
 

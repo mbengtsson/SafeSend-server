@@ -22,7 +22,7 @@ public class LoginController {
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
 			HttpServletRequest request) {
 
-		ModelAndView mav = new ModelAndView();
+		ModelAndView mav = new ModelAndView("login");
 		if (error != null) {
 			String accountLocked = "User account is locked";
 			if (request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION").toString().toLowerCase().contains
@@ -33,8 +33,6 @@ public class LoginController {
 			}
 		}
 
-		mav.setViewName("login");
-
 		return mav;
 
 	}
@@ -43,7 +41,7 @@ public class LoginController {
 	@RequestMapping(value = "/403.html", method = RequestMethod.GET)
 	public ModelAndView redirect() {
 
-		ModelAndView mav = new ModelAndView();
+		ModelAndView mav = new ModelAndView("403");
 
 		//check if user is login
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,7 +50,6 @@ public class LoginController {
 			mav.addObject("username", userDetail.getUsername());
 		}
 
-		mav.setViewName("403");
 		return mav;
 
 	}
