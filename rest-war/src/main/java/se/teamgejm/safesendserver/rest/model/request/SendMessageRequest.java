@@ -5,7 +5,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * SendMessage request bean
+ *
+ * @author Marcus Bengtsson
  */
 public class SendMessageRequest {
 

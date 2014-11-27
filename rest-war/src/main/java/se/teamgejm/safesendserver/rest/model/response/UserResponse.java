@@ -1,7 +1,9 @@
 package se.teamgejm.safesendserver.rest.model.response;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-14.
+ * User response bean
+ *
+ * @author Marcus Bengtsson
  */
 public class UserResponse {
 

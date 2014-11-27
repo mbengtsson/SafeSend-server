@@ -1,7 +1,9 @@
 package se.teamgejm.safesendserver.rest.model.response;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * ReceiveMessage response bean
+ *
+ * @author Marcus Bengtsson
  */
 public class ReceiveMessageResponse {
 

@@ -3,6 +3,8 @@ package se.teamgejm.safesendserver.rest.model.request;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
+ * ValidateCredentials request bean
+ *
  * @author Emil Stjerneman
  */
 public class ValidateCredentialsRequest {

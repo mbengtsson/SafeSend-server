@@ -3,7 +3,9 @@ package se.teamgejm.safesendserver.rest.model.request;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-14.
+ * CreateUser request bean
+ *
+ * @author Marcus Bengtsson
  */
 public class CreateUserRequest {
 
