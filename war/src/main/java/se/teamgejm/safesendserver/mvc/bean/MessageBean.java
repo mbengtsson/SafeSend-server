@@ -5,7 +5,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-21.
+ * Message bean
+ *
+ * @author Marcus Bengtsson
  */
 public class MessageBean {
 
@@ -61,11 +63,11 @@ public class MessageBean {
 		return time;
 	}
 
-	public void setTime(String time) {
-		this.time = time;
-	}
-
 	public void setTime(DateTime time) {
 		this.time = timeFormatter.print(time);
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 }

@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-20.
+ * Custom Spring-security UserDetailService, used to get user objects from our database and convert them to
+ * org.springframework.security.core.userdetails.User objects for Spring-security. Also checks if the user is locked
+ * in the flood-controll to prevent brute-force attacks on login-page.
+ *
+ * @author Marcus Bengtsson
  */
 public class CustomUserDetailsService implements UserDetailsService {
 

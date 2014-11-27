@@ -19,6 +19,8 @@ import java.security.Principal;
 import java.util.*;
 
 /**
+ * Controller containing administration pages
+ *
  * @author Marcus Bengtsson
  */
 @Controller

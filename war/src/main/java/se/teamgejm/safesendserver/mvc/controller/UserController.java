@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Controller containing user pages
+ *
  * @author Marcus Bengtsson
  */
 @Controller

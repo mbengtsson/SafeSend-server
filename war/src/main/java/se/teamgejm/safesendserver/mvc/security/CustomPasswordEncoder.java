@@ -6,7 +6,9 @@ import se.teamgejm.safesendserver.security.PasswordHasher;
 import javax.inject.Inject;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-20.
+ * Custom Spring-security PasswordEncoder, uses PasswordHasher for password hashing and verification
+ *
+ * @author Marcus Bengtsson
  */
 public class CustomPasswordEncoder implements PasswordEncoder {
 

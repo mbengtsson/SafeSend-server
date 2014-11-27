@@ -9,6 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Controller containing spring-security login page
+ *
  * @author Marcus Bengtsson
  */
 @Controller

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-26.
+ * Controller containing custom error pages
+ *
+ * @author Marcus Bengtsson
  */
 @Controller
 public class ErrorController {

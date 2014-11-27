@@ -9,7 +9,10 @@ import se.teamgejm.safesendserver.service.FloodService;
 import javax.inject.Inject;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-25.
+ * Listen to Spring-security AuthenticationFailureBadCredentialsEvents and register failed login attempts to
+ * flood-controller
+ *
+ * @author Marcus Bengtsson
  */
 @Component
 public class AuthenticationFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {

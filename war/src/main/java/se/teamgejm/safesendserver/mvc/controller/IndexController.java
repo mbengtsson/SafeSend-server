@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * Controller containing index page
+ *
  * @author Marcus Bengtsson
  */
 @Controller

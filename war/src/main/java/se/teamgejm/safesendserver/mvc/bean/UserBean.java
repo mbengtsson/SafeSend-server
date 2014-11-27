@@ -1,7 +1,9 @@
 package se.teamgejm.safesendserver.mvc.bean;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-23.
+ * User bean
+ *
+ * @author Marcus Bengtsson
  */
 public class UserBean {
 

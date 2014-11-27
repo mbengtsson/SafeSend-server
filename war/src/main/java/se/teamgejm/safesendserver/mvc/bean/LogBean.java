@@ -5,7 +5,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-22.
+ * Log bean
+ *
+ * @author Marcus Bengtsson
  */
 public class LogBean implements Comparable<LogBean> {
 
@@ -61,12 +63,12 @@ public class LogBean implements Comparable<LogBean> {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(String timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-
 	public void setTimeStamp(DateTime timeStamp) {
 		this.timeStamp = timeFormatter.print(timeStamp);
+	}
+
+	public void setTimeStamp(String timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
 	@Override
