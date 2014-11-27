@@ -33,11 +33,11 @@ public class DefaultPasswordHasher implements PasswordHasher {
 	 * @return salted hash of the password
 	 */
 	@Override
-	public String generateHash(String password) {
+	public String generateHash(final String password) {
 
 		try {
-			byte[] salt = getSalt();
-			byte[] hash = getHash(password, salt, PBKDF2_ITERATIONS, HASH_BITS);
+			final byte[] salt = getSalt();
+			final byte[] hash = getHash(password, salt, PBKDF2_ITERATIONS, HASH_BITS);
 
 			return String.format("%s:%s:%s", PBKDF2_ITERATIONS, toHex(salt), toHex(hash));
 
@@ -55,15 +55,15 @@ public class DefaultPasswordHasher implements PasswordHasher {
 	 * @return true if the password is valid
 	 */
 	@Override
-	public boolean validatePassword(String password, String correctHash) {
+	public boolean validatePassword(final String password, final String correctHash) {
 
-		String[] hashParams = correctHash.split(":");
+		final String[] hashParams = correctHash.split(":");
 		int iterations = Integer.parseInt(hashParams[0]);
-		byte[] salt = fromHex(hashParams[1]);
-		byte[] hash = fromHex(hashParams[2]);
+		final byte[] salt = fromHex(hashParams[1]);
+		final byte[] hash = fromHex(hashParams[2]);
 
 		try {
-			byte[] testHash = getHash(password, salt, iterations, hash.length * 8);
+			final byte[] testHash = getHash(password, salt, iterations, hash.length * 8);
 
 			return slowHashEquals(hash, testHash);
 
@@ -72,30 +72,31 @@ public class DefaultPasswordHasher implements PasswordHasher {
 		}
 	}
 
-	private byte[] getHash(String password, byte[] salt, int iterations, int hashBits) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	private byte[] getHash(final String password, final byte[] salt, final int iterations,
+			final int hashBits) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-		char[] chars = password.toCharArray();
+		final char[] chars = password.toCharArray();
 
-		PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, hashBits);
-		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(HASH_ALGORITHM);
+		final PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, hashBits);
+		final SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(HASH_ALGORITHM);
 
 		return keyFactory.generateSecret(spec).getEncoded();
 	}
 
 	private byte[] getSalt() throws NoSuchAlgorithmException {
 
-		SecureRandom random = SecureRandom.getInstance(SALT_ALGORITHM);
-		byte[] salt = new byte[SALT_BYTES];
+		final SecureRandom random = SecureRandom.getInstance(SALT_ALGORITHM);
+		final byte[] salt = new byte[SALT_BYTES];
 		random.nextBytes(salt);
 
 		return salt;
 	}
 
-	private String toHex(byte[] bytes) {
+	private String toHex(final byte[] bytes) {
 
-		BigInteger bigInt = new BigInteger(1, bytes);
-		String hex = bigInt.toString(16);
-		int paddingLength = (bytes.length * 2) - hex.length();
+		final BigInteger bigInt = new BigInteger(1, bytes);
+		final String hex = bigInt.toString(16);
+		final int paddingLength = (bytes.length * 2) - hex.length();
 		if (paddingLength > 0) {
 			return String.format("%0" + paddingLength + "d", 0) + hex;
 		} else {
@@ -103,9 +104,9 @@ public class DefaultPasswordHasher implements PasswordHasher {
 		}
 	}
 
-	private byte[] fromHex(String hex) {
+	private byte[] fromHex(final String hex) {
 
-		byte[] bytes = new byte[hex.length() / 2];
+		final byte[] bytes = new byte[hex.length() / 2];
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
 		}
@@ -120,7 +121,7 @@ public class DefaultPasswordHasher implements PasswordHasher {
 	 * @param hash2 byte-array
 	 * @return true if equal
 	 */
-	private boolean slowHashEquals(byte[] hash1, byte[] hash2) {
+	private boolean slowHashEquals(final byte[] hash1, final byte[] hash2) {
 
 		int diff = hash1.length ^ hash2.length;
 		for (int i = 0; i < hash1.length && i < hash2.length; i++) {

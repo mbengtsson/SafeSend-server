@@ -12,8 +12,8 @@ import javax.ejb.*;
 public interface PasswordHasher {
 
 	@Lock(LockType.READ)
-	String generateHash(String password);
+	String generateHash(final String password);
 
 	@Lock(LockType.READ)
-	boolean validatePassword(String password, String correctHash);
+	boolean validatePassword(final String password, final String correctHash);
 }

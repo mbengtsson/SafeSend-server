@@ -32,10 +32,10 @@ public class DefaultUserService implements UserService {
 	private PasswordHasher passHash;
 
 	@Override
-	public User createUser(User user) {
+	public User createUser(final User user) {
 
 		if (validateUserData(user)) {
-			long id = userDao.persist(user);
+			final long id = userDao.persist(user);
 
 			return getUser(id);
 		} else {
@@ -44,17 +44,20 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void removeUser(User user) {
-		userDao.remove(user);
+	public void removeUser(final User user) {
+
+		if (validateUserData(user)) {
+			userDao.remove(user);
+		}
 	}
 
 	@Override
-	public User getUser(long id) {
+	public User getUser(final long id) {
 		return userDao.findById(id);
 	}
 
 	@Override
-	public void updateUser(User user) {
+	public void updateUser(final User user) {
 
 		if (validateUserData(user)) {
 			userDao.update(user);
@@ -62,7 +65,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public User getUserByUsername(String username) {
+	public User getUserByUsername(final String username) {
 		return userDao.getUserByEmail(username);
 	}
 
@@ -79,13 +82,13 @@ public class DefaultUserService implements UserService {
 
 			if (authorization != null && authorization.matches(AUTHORIZATION_PATTERN)) {
 
-				String[] parts = authorization.split(":");
-				String username = parts[0];
-				String password = parts[1];
-				User user = getUserByUsername(username);
+				final String[] parts = authorization.split(":");
+				final String username = parts[0];
+				final String password = parts[1];
+				final User user = getUserByUsername(username);
 
 				if (user != null) {
-					String correctHash = user.getPassword();
+					final String correctHash = user.getPassword();
 
 					return passHash.validatePassword(password, correctHash) ? user : null;
 				}
@@ -95,24 +98,24 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public boolean checkAuthorization(String authorization) {
+	public boolean checkAuthorization(final String authorization) {
 		return getAuthorizedUser(authorization) != null;
 	}
 
 	@Override
-	public boolean checkAuthorization(String email, String password) {
-		User user = getUserByUsername(email);
+	public boolean checkAuthorization(final String email, final String password) {
+		final User user = getUserByUsername(email);
 
 		if (user != null) {
-			String correctHash = user.getPassword();
+			final String correctHash = user.getPassword();
 
-			return passHash.validatePassword(password, correctHash) ? true : false;
+			return passHash.validatePassword(password, correctHash);
 		}
 
 		return false;
 	}
 
-	private boolean validateUserData(User user) {
+	private boolean validateUserData(final User user) {
 
 		return user.getEmail().matches(EMAIL_PATTERN) && user.getDisplayName().matches(DISPLAYNAME_PATTERN);
 	}

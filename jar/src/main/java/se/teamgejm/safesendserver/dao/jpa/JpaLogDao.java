@@ -25,32 +25,32 @@ public class JpaLogDao extends JpaBaseDao<LogEntry> implements LogDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<LogEntry> getLogEntrysByActorID(long actorId) {
-		Query query = em.createNamedQuery("getLogEntrysByActorID");
+	public Collection<LogEntry> getLogEntrysByActorID(final long actorId) {
+		final Query query = em.createNamedQuery("getLogEntrysByActorID");
 		query.setParameter("actorId", actorId);
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<LogEntry> getLogEntrysByTargetID(long targetId) {
-		Query query = em.createNamedQuery("getLogEntrysByTargetID");
+	public Collection<LogEntry> getLogEntrysByTargetID(final long targetId) {
+		final Query query = em.createNamedQuery("getLogEntrysByTargetID");
 		query.setParameter("targetId", targetId);
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType) {
-		Query query = em.createNamedQuery("getLogEntrysByObjectType");
+	public Collection<LogEntry> getLogEntrysByObjectType(final ObjectType objectType) {
+		final Query query = em.createNamedQuery("getLogEntrysByObjectType");
 		query.setParameter("objectType", objectType);
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<LogEntry> getLogEntrysByVerb(Verb verb) {
-		Query query = em.createNamedQuery("getLogEntrysByVerb");
+	public Collection<LogEntry> getLogEntrysByVerb(final Verb verb) {
+		final Query query = em.createNamedQuery("getLogEntrysByVerb");
 		query.setParameter("verb", verb);
 		return query.getResultList();
 	}

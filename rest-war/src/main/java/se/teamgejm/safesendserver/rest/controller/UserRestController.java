@@ -48,13 +48,13 @@ public class UserRestController {
 	 * @return list of all users
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getAllUsers(@RequestHeader("Authorization") String authorization) {
+	public ResponseEntity getAllUsers(@RequestHeader("Authorization") final String authorization) {
 
 		if (!userService.checkAuthorization(authorization)) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		List<UserResponse> userList = new ArrayList<UserResponse>();
+		final List<UserResponse> userList = new ArrayList<UserResponse>();
 
 		for (User user : userService.getAllUsers()) {
 			userList.add(new UserResponse(user.getId(), user.getEmail(), user.getDisplayName()));
@@ -72,7 +72,8 @@ public class UserRestController {
 	 * @return 200 if the validation succeed, otherwise 401
 	 */
 	@RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity validateUserCredentials(@Valid @RequestBody ValidateCredentialsRequest body, HttpServletRequest request) {
+	public ResponseEntity validateUserCredentials(@Valid @RequestBody final ValidateCredentialsRequest body,
+			final HttpServletRequest request) {
 		final int ipThreshold = 60;
 		final int userThreshold = 6;
 
@@ -112,7 +113,7 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
 			produces = "application/json")
-	public ResponseEntity createUser(@Valid @RequestBody CreateUserRequest request) {
+	public ResponseEntity createUser(@Valid @RequestBody final CreateUserRequest request) {
 
 		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
 				== null || request
@@ -150,13 +151,14 @@ public class UserRestController {
 	 * @return the user
 	 */
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getUser(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
+	public ResponseEntity getUser(@RequestHeader("Authorization") final String authorization,
+			@PathVariable final long id) {
 
 		if (!userService.checkAuthorization(authorization)) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		User user = userService.getUser(id);
+		final User user = userService.getUser(id);
 
 		if (user == null) {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
@@ -175,13 +177,14 @@ public class UserRestController {
 	 * @return the users public-key
 	 */
 	@RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getPublicKey(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
+	public ResponseEntity getPublicKey(@RequestHeader("Authorization") final String authorization,
+			@PathVariable final long id) {
 
 		if (!userService.checkAuthorization(authorization)) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		User user = userService.getUser(id);
+		final User user = userService.getUser(id);
 
 		if (user == null) {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);

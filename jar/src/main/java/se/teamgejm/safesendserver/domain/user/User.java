@@ -37,6 +37,7 @@ public class User implements IdHolder, Comparable<User> {
 	private Role role;
 
 	public User() {
+		// Default constructor.
 	}
 
 	public User(String email, String displayName, String password, String publicKey) {

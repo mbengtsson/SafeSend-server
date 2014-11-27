@@ -13,7 +13,7 @@ import java.util.Collection;
 @Local
 public interface UserDao extends BaseDao<User> {
 
-	User getUserByEmail(String email);
+	User getUserByEmail(final String email);
 
 	Collection<User> getAllUsers();
 }

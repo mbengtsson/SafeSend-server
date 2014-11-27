@@ -21,24 +21,24 @@ public class DefaultLogService implements LogService {
 	private LogDao logDao;
 
 	@Override
-	public LogEntry createLogEntry(LogEntry logEntry) {
-		long id = logDao.persist(logEntry);
+	public LogEntry createLogEntry(final LogEntry logEntry) {
+		final long id = logDao.persist(logEntry);
 
 		return getLogEntry(id);
 	}
 
 	@Override
-	public void removeLogEntry(LogEntry logEntry) {
+	public void removeLogEntry(final LogEntry logEntry) {
 		logDao.remove(logEntry);
 	}
 
 	@Override
-	public LogEntry getLogEntry(long id) {
+	public LogEntry getLogEntry(final long id) {
 		return logDao.findById(id);
 	}
 
 	@Override
-	public void updateLogEntry(LogEntry logEntry) {
+	public void updateLogEntry(final LogEntry logEntry) {
 		logDao.update(logEntry);
 	}
 
@@ -48,22 +48,22 @@ public class DefaultLogService implements LogService {
 	}
 
 	@Override
-	public Collection<LogEntry> getLogEntrysByActorID(long actorId) {
+	public Collection<LogEntry> getLogEntrysByActorID(final long actorId) {
 		return logDao.getLogEntrysByActorID(actorId);
 	}
 
 	@Override
-	public Collection<LogEntry> getLogEntrysByTargetID(long targetId) {
+	public Collection<LogEntry> getLogEntrysByTargetID(final long targetId) {
 		return logDao.getLogEntrysByTargetID(targetId);
 	}
 
 	@Override
-	public Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType) {
+	public Collection<LogEntry> getLogEntrysByObjectType(final ObjectType objectType) {
 		return logDao.getLogEntrysByObjectType(objectType);
 	}
 
 	@Override
-	public Collection<LogEntry> getLogEntrysByVerb(Verb verb) {
+	public Collection<LogEntry> getLogEntrysByVerb(final Verb verb) {
 		return logDao.getLogEntrysByVerb(verb);
 	}
 }

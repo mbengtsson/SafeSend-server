@@ -31,19 +31,19 @@ public class UserController {
 	private MessageService messageService;
 
 	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
-	public ModelAndView userPage(Principal principal) {
+	public ModelAndView userPage(final Principal principal) {
 
-		User user = userService.getUserByUsername(principal.getName());
-		List<Message> messages = new ArrayList<Message>(messageService.getMessagesByReceiver(user));
+		final User user = userService.getUserByUsername(principal.getName());
+		final List<Message> messages = new ArrayList<Message>(messageService.getMessagesByReceiver(user));
 		Collections.sort(messages);
-		List<MessageBean> messageBeans = new ArrayList<MessageBean>();
+		final List<MessageBean> messageBeans = new ArrayList<MessageBean>();
 
 		for (Message message : messages) {
 			messageBeans.add(new MessageBean(message.getSender().getDisplayName(), message.getSender().getEmail(),
 					message.getReceiver().getDisplayName(), message.getReceiver().getEmail(), message.getTimeStamp()));
 		}
 
-		ModelAndView mav = new ModelAndView("user");
+		final ModelAndView mav = new ModelAndView("user");
 		mav.addObject("displayName", user.getDisplayName());
 		mav.addObject("messagesLength", messageBeans.size());
 		mav.addObject("messages", messageBeans);

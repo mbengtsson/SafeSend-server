@@ -15,21 +15,21 @@ import java.util.Collection;
 @Local
 public interface LogService {
 
-	LogEntry createLogEntry(LogEntry logEntry);
+	LogEntry createLogEntry(final LogEntry logEntry);
 
-	void removeLogEntry(LogEntry logEntry);
+	void removeLogEntry(final LogEntry logEntry);
 
-	LogEntry getLogEntry(long id);
+	LogEntry getLogEntry(final long id);
 
-	void updateLogEntry(LogEntry logEntry);
+	void updateLogEntry(final LogEntry logEntry);
 
 	Collection<LogEntry> getAllLogEntrys();
 
-	Collection<LogEntry> getLogEntrysByActorID(long actorId);
+	Collection<LogEntry> getLogEntrysByActorID(final long actorId);
 
-	Collection<LogEntry> getLogEntrysByTargetID(long targetId);
+	Collection<LogEntry> getLogEntrysByTargetID(final long targetId);
 
-	Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType);
+	Collection<LogEntry> getLogEntrysByObjectType(final ObjectType objectType);
 
-	Collection<LogEntry> getLogEntrysByVerb(Verb verb);
+	Collection<LogEntry> getLogEntrysByVerb(final Verb verb);
 }

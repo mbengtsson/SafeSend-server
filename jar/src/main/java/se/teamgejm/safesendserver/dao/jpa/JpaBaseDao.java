@@ -21,28 +21,28 @@ public abstract class JpaBaseDao<E extends IdHolder> implements BaseDao<E> {
 
 	@SuppressWarnings("unchecked")
 	public JpaBaseDao() {
-		ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
+		final ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
 		this.entityClass = (Class<E>) genericSuperclass.getActualTypeArguments()[0];
 	}
 
 	@Override
-	public long persist(E entity) {
+	public long persist(final E entity) {
 		em.persist(entity);
 		return entity.getId();
 	}
 
 	@Override
-	public void remove(E entity) {
+	public void remove(final E entity) {
 		em.remove(em.getReference(entityClass, entity.getId()));
 	}
 
 	@Override
-	public E findById(long id) {
+	public E findById(final long id) {
 		return em.find(entityClass, id);
 	}
 
 	@Override
-	public void update(E entity) {
+	public void update(final E entity) {
 		em.merge(entity);
 	}
 }

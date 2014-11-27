@@ -14,6 +14,6 @@ import java.util.Collection;
 @Local
 public interface MessageDao extends BaseDao<Message> {
 
-	Collection<Message> getMessagesByReceiver(User receiver);
+	Collection<Message> getMessagesByReceiver(final User receiver);
 
 }

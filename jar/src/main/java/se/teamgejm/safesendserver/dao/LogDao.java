@@ -17,12 +17,12 @@ public interface LogDao extends BaseDao<LogEntry> {
 
 	Collection<LogEntry> getAllLogEntrys();
 
-	Collection<LogEntry> getLogEntrysByActorID(long actorId);
+	Collection<LogEntry> getLogEntrysByActorID(final long actorId);
 
-	Collection<LogEntry> getLogEntrysByTargetID(long targetId);
+	Collection<LogEntry> getLogEntrysByTargetID(final long targetId);
 
-	Collection<LogEntry> getLogEntrysByObjectType(ObjectType objectType);
+	Collection<LogEntry> getLogEntrysByObjectType(final ObjectType objectType);
 
-	Collection<LogEntry> getLogEntrysByVerb(Verb verb);
+	Collection<LogEntry> getLogEntrysByVerb(final Verb verb);
 
 }

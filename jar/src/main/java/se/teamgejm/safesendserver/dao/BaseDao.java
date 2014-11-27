@@ -9,11 +9,11 @@ import se.teamgejm.safesendserver.domain.IdHolder;
  */
 public interface BaseDao<E extends IdHolder> {
 
-	long persist(E entity);
+	long persist(final E entity);
 
-	void remove(E entity);
+	void remove(final E entity);
 
-	E findById(long id);
+	E findById(final long id);
 
-	void update(E entity);
+	void update(final E entity);
 }

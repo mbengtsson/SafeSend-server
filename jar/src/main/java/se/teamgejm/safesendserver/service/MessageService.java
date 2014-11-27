@@ -14,13 +14,13 @@ import java.util.Collection;
 @Local
 public interface MessageService {
 
-	Message createMessage(Message message);
+	Message createMessage(final Message message);
 
-	void removeMessage(Message message);
+	void removeMessage(final Message message);
 
-	Message getMessage(long id);
+	Message getMessage(final long id);
 
-	void updateMessage(Message message);
+	void updateMessage(final Message message);
 
-	Collection<Message> getMessagesByReceiver(User receiver);
+	Collection<Message> getMessagesByReceiver(final User receiver);
 }

@@ -16,12 +16,12 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 	private PasswordHasher passHash;
 
 	@Override
-	public String encode(CharSequence rawPassword) {
+	public String encode(final CharSequence rawPassword) {
 		return passHash.generateHash(rawPassword.toString());
 	}
 
 	@Override
-	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+	public boolean matches(final CharSequence rawPassword, final String encodedPassword) {
 		return passHash.validatePassword(rawPassword.toString(), encodedPassword);
 	}
 

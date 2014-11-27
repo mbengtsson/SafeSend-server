@@ -47,10 +47,10 @@ public class MessageRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity sendMessage(@RequestHeader("Authorization") String authorization,
-			@Valid @RequestBody SendMessageRequest request) {
+	public ResponseEntity sendMessage(@RequestHeader("Authorization") final String authorization,
+			@Valid @RequestBody final SendMessageRequest request) {
 
-		User authorizedUser = userService.getAuthorizedUser(authorization);
+		final User authorizedUser = userService.getAuthorizedUser(authorization);
 
 		if (authorizedUser == null) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
@@ -60,13 +60,13 @@ public class MessageRestController {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
-		User receiver = userService.getUser(request.getReceiverId());
+		final User receiver = userService.getUser(request.getReceiverId());
 
 		if (receiver == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
-		Message message = new Message(request.getMessage(), authorizedUser, receiver, DateTime.now());
+		final Message message = new Message(request.getMessage(), authorizedUser, receiver, DateTime.now());
 		messageService.createMessage(message);
 
 		logService.createLogEntry(new LogEntry(authorizedUser.getId(), request.getReceiverId(),
@@ -83,24 +83,25 @@ public class MessageRestController {
 	 * @return the message together with the senders public-key
 	 */
 	@RequestMapping(value = "/messages/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity receiveMessage(@RequestHeader("Authorization") String authorization, @PathVariable long id) {
+	public ResponseEntity receiveMessage(@RequestHeader("Authorization") final String authorization,
+			@PathVariable final long id) {
 
-		Message message = messageService.getMessage(id);
+		final Message message = messageService.getMessage(id);
 
 		if (message == null) {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 		}
 
-		User authorizedUser = userService.getAuthorizedUser(authorization);
+		final User authorizedUser = userService.getAuthorizedUser(authorization);
 
 		if (authorizedUser == null || !authorizedUser.equals(message.getReceiver())) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
 		messageService.removeMessage(message);
-		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
+		final UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
 				message.getSender().getDisplayName());
-		UserResponse receiver = new UserResponse(message.getReceiver().getId(), message.getReceiver().getEmail(),
+		final UserResponse receiver = new UserResponse(message.getReceiver().getId(), message.getReceiver().getEmail(),
 				message.getReceiver().getDisplayName());
 		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReceiver().getId(),
 				ObjectType.TEXT_MESSAGE, Verb.RECEIVE, DateTime.now()));
@@ -117,20 +118,21 @@ public class MessageRestController {
 	 * @return list of messages
 	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity listMessages(@RequestHeader("Authorization") String authorization) {
+	public ResponseEntity listMessages(@RequestHeader("Authorization") final String authorization) {
 
-		User authorizedUser = userService.getAuthorizedUser(authorization);
+		final User authorizedUser = userService.getAuthorizedUser(authorization);
 
 		if (authorizedUser == null) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
+		final List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
 
 		for (Message message : messageService.getMessagesByReceiver(authorizedUser)) {
-			UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
+			final UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
 					message.getSender().getDisplayName());
-			UserResponse receiver = new UserResponse(message.getReceiver().getId(), message.getReceiver().getEmail(),
+			final UserResponse receiver = new UserResponse(message.getReceiver().getId(),
+					message.getReceiver().getEmail(),
 					message.getReceiver().getDisplayName());
 			newMessages.add(new NewMessagesResponse(message.getId(), sender, receiver, message.getTimeStamp().getMillis
 					()));

@@ -44,6 +44,7 @@ public class LogEntry implements IdHolder, Comparable<LogEntry> {
 	private DateTime timeStamp;
 
 	public LogEntry() {
+		// Default constructor.
 	}
 
 	public LogEntry(long actorId, long targetId, ObjectType objectType, Verb verb, DateTime timeStamp) {

@@ -20,30 +20,30 @@ public class DefaultMessageService implements MessageService {
 	private MessageDao messageDao;
 
 	@Override
-	public Message createMessage(Message message) {
+	public Message createMessage(final Message message) {
 
-		long id = messageDao.persist(message);
+		final long id = messageDao.persist(message);
 
 		return getMessage(id);
 	}
 
 	@Override
-	public void removeMessage(Message message) {
+	public void removeMessage(final Message message) {
 		messageDao.remove(message);
 	}
 
 	@Override
-	public Message getMessage(long id) {
+	public Message getMessage(final long id) {
 		return messageDao.findById(id);
 	}
 
 	@Override
-	public void updateMessage(Message message) {
+	public void updateMessage(final Message message) {
 		messageDao.update(message);
 	}
 
 	@Override
-	public Collection<Message> getMessagesByReceiver(User receiver) {
+	public Collection<Message> getMessagesByReceiver(final User receiver) {
 		return messageDao.getMessagesByReceiver(receiver);
 	}
 }

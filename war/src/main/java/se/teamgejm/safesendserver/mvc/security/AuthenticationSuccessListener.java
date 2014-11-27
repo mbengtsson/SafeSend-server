@@ -20,8 +20,8 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
 	private FloodService floodService;
 
 	@Override
-	public void onApplicationEvent(AuthenticationSuccessEvent event) {
-		String email = event.getAuthentication().getPrincipal().toString();
+	public void onApplicationEvent(final AuthenticationSuccessEvent event) {
+		final String email = event.getAuthentication().getPrincipal().toString();
 
 		floodService.purgeEvents(FloodType.FAILED_VALIDATE_CREDENTIALS, email);
 

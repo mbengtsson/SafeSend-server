@@ -17,10 +17,10 @@ import java.util.List;
 public class JpaUserDao extends JpaBaseDao<User> implements UserDao {
 
 	@Override
-	public User getUserByEmail(String email) {
-		Query query = em.createNamedQuery("getUserByEmail");
+	public User getUserByEmail(final String email) {
+		final Query query = em.createNamedQuery("getUserByEmail");
 		query.setParameter("email", email);
-		List<User> userList = query.getResultList();
+		final List<User> userList = query.getResultList();
 
 		return userList.isEmpty() ? null : userList.get(0);
 	}

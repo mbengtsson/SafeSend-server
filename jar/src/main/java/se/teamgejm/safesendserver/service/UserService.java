@@ -13,21 +13,21 @@ import java.util.Collection;
 @Local
 public interface UserService {
 
-	User createUser(User user);
+	User createUser(final User user);
 
-	void removeUser(User user);
+	void removeUser(final User user);
 
-	User getUser(long id);
+	User getUser(final long id);
 
-	void updateUser(User user);
+	void updateUser(final User user);
 
-	User getUserByUsername(String username);
+	User getUserByUsername(final String username);
 
 	Collection<User> getAllUsers();
 
-	public User getAuthorizedUser(String authorization);
+	public User getAuthorizedUser(final String authorization);
 
-	public boolean checkAuthorization(String authorization);
+	public boolean checkAuthorization(final String authorization);
 
-	public boolean checkAuthorization(String email, String password);
+	public boolean checkAuthorization(final String email, final String password);
 }

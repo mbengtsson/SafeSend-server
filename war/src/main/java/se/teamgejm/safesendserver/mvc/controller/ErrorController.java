@@ -20,11 +20,11 @@ public class ErrorController {
 	@RequestMapping(value = "/403.html", method = RequestMethod.GET)
 	public ModelAndView error403() {
 
-		ModelAndView mav = new ModelAndView("403");
+		final ModelAndView mav = new ModelAndView("403");
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetail = (UserDetails) auth.getPrincipal();
+			final UserDetails userDetail = (UserDetails) auth.getPrincipal();
 			mav.addObject("username", userDetail.getUsername());
 		}
 

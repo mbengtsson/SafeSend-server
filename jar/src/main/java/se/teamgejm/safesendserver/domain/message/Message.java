@@ -41,6 +41,7 @@ public class Message implements IdHolder, Comparable<Message> {
 	private DateTime timeStamp;
 
 	public Message() {
+		// Default constructor.
 	}
 
 	public Message(String message, User sender, User receiver, DateTime timeStamp) {

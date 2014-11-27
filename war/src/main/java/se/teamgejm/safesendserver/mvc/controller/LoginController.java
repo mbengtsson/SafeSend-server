@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
 
 	@RequestMapping(value = "/login.html", method = RequestMethod.GET)
-	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-			HttpServletRequest request) {
+	public ModelAndView login(@RequestParam(value = "error", required = false) final String error,
+			final HttpServletRequest request) {
 
-		ModelAndView mav = new ModelAndView("login");
+		final ModelAndView mav = new ModelAndView("login");
 		if (error != null) {
-			String accountLocked = "User account is locked";
+			final String accountLocked = "User account is locked";
 			if (request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION").toString().toLowerCase().contains
 					(accountLocked.toLowerCase())) {
 				mav.addObject("error", "To many attempts, account locked for 1 hour");

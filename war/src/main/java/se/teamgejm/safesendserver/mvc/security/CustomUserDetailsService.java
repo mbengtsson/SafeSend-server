@@ -32,20 +32,20 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private FloodService floodService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
 		if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, username, userThreshold)) {
 			return new org.springframework.security.core.userdetails.User(username, "", true, true, true, false,
 					new ArrayList<GrantedAuthority>());
 		}
 
-		User user = userService.getUserByUsername(username);
+		final User user = userService.getUserByUsername(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
 
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true,
