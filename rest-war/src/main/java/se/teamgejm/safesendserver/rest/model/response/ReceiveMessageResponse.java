@@ -7,14 +7,18 @@ public class ReceiveMessageResponse {
 
 	private UserResponse sender;
 
+	private UserResponse receiver;
+
 	private String senderPublicKey;
 
 	private String message;
 
 	private long timeStamp;
 
-	public ReceiveMessageResponse(UserResponse sender, String senderPublicKey, String message, long timeStamp) {
+	public ReceiveMessageResponse(UserResponse sender, UserResponse receiver, String senderPublicKey, String message,
+			long timeStamp) {
 		this.sender = sender;
+		this.receiver = receiver;
 		this.senderPublicKey = senderPublicKey;
 		this.message = message;
 		this.timeStamp = timeStamp;
@@ -26,6 +30,14 @@ public class ReceiveMessageResponse {
 
 	public void setSender(UserResponse senderId) {
 		this.sender = senderId;
+	}
+
+	public UserResponse getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserResponse receiver) {
+		this.receiver = receiver;
 	}
 
 	public String getSenderPublicKey() {

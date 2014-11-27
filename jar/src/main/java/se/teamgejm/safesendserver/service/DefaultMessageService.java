@@ -43,7 +43,7 @@ public class DefaultMessageService implements MessageService {
 	}
 
 	@Override
-	public Collection<Message> getMessagesByReciever(User receiver) {
-		return messageDao.getMessagesByReciever(receiver);
+	public Collection<Message> getMessagesByReceiver(User receiver) {
+		return messageDao.getMessagesByReceiver(receiver);
 	}
 }

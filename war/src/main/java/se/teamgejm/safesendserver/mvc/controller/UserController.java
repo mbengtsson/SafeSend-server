@@ -32,13 +32,13 @@ public class UserController {
 	public ModelAndView userPage(Principal principal) {
 
 		User user = userService.getUserByUsername(principal.getName());
-		List<Message> messages = new ArrayList<Message>(messageService.getMessagesByReciever(user));
+		List<Message> messages = new ArrayList<Message>(messageService.getMessagesByReceiver(user));
 		Collections.sort(messages);
 		List<MessageBean> messageBeans = new ArrayList<MessageBean>();
 
 		for (Message message : messages) {
 			messageBeans.add(new MessageBean(message.getSender().getDisplayName(), message.getSender().getEmail(),
-					message.getReciever().getDisplayName(), message.getReciever().getEmail(), message.getTimeStamp()));
+					message.getReceiver().getDisplayName(), message.getReceiver().getEmail(), message.getTimeStamp()));
 		}
 
 		ModelAndView mav = new ModelAndView("user");

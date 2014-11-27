@@ -5,24 +5,27 @@ package se.teamgejm.safesendserver.rest.model.response;
  */
 public class NewMessagesResponse {
 
-	private long messageId;
+	private long id;
 
 	private UserResponse sender;
 
+	private UserResponse receiver;
+
 	private long timeStamp;
 
-	public NewMessagesResponse(long messageId, UserResponse sender, long timeStamp) {
-		this.messageId = messageId;
+	public NewMessagesResponse(long id, UserResponse sender, UserResponse receiver, long timeStamp) {
+		this.id = id;
 		this.sender = sender;
+		this.receiver = receiver;
 		this.timeStamp = timeStamp;
 	}
 
-	public long getMessageId() {
-		return messageId;
+	public long getId() {
+		return id;
 	}
 
-	public void setMessageId(long messageId) {
-		this.messageId = messageId;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public UserResponse getSender() {
@@ -31,6 +34,14 @@ public class NewMessagesResponse {
 
 	public void setSender(UserResponse sender) {
 		this.sender = sender;
+	}
+
+	public UserResponse getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserResponse receiver) {
+		this.receiver = receiver;
 	}
 
 	public long getTimeStamp() {

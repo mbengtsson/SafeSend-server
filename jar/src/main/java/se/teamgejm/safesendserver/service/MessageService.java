@@ -22,5 +22,5 @@ public interface MessageService {
 
 	void updateMessage(Message message);
 
-	Collection<Message> getMessagesByReciever(User receiver);
+	Collection<Message> getMessagesByReceiver(User receiver);
 }

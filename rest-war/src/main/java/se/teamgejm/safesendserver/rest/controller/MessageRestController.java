@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * REST-controller containing /messages endpoints
+ *
+ * @author Marcus Bengtsson
  */
 @RestController
 public class MessageRestController {
@@ -91,17 +93,19 @@ public class MessageRestController {
 
 		User authorizedUser = userService.getAuthorizedUser(authorization);
 
-		if (authorizedUser == null || !authorizedUser.equals(message.getReciever())) {
+		if (authorizedUser == null || !authorizedUser.equals(message.getReceiver())) {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
 		messageService.removeMessage(message);
 		UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
 				message.getSender().getDisplayName());
-		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReciever().getId(),
+		UserResponse receiver = new UserResponse(message.getReceiver().getId(), message.getReceiver().getEmail(),
+				message.getReceiver().getDisplayName());
+		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReceiver().getId(),
 				ObjectType.TEXT_MESSAGE, Verb.RECEIVE, DateTime.now()));
 
-		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender,
+		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender, receiver,
 				message.getSender().getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()),
 				HttpStatus.OK);
 	}
@@ -123,10 +127,13 @@ public class MessageRestController {
 
 		List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
 
-		for (Message message : messageService.getMessagesByReciever(authorizedUser)) {
+		for (Message message : messageService.getMessagesByReceiver(authorizedUser)) {
 			UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
 					message.getSender().getDisplayName());
-			newMessages.add(new NewMessagesResponse(message.getId(), sender, message.getTimeStamp().getMillis()));
+			UserResponse receiver = new UserResponse(message.getReceiver().getId(), message.getReceiver().getEmail(),
+					message.getReceiver().getDisplayName());
+			newMessages.add(new NewMessagesResponse(message.getId(), sender, receiver, message.getTimeStamp().getMillis
+					()));
 		}
 
 		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);

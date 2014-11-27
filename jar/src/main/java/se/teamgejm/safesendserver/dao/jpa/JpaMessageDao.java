@@ -17,7 +17,7 @@ import java.util.Collection;
 public class JpaMessageDao extends JpaBaseDao<Message> implements MessageDao {
 
 	@Override
-	public Collection<Message> getMessagesByReciever(User receiver) {
+	public Collection<Message> getMessagesByReceiver(User receiver) {
 		Query query = em.createNamedQuery("getMessagesByReciever");
 		query.setParameter("receiver", receiver);
 		return query.getResultList();

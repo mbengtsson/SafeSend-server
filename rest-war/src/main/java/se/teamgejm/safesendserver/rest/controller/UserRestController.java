@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marcus Bengtsson on 2014-11-13.
+ * REST-controller containing /users endpoints
+ *
+ * @author Marcus Bengtsson
  */
 @RestController
 public class UserRestController {
