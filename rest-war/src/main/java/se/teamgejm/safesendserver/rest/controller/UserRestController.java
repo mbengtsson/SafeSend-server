@@ -116,9 +116,7 @@ public class UserRestController {
 	public ResponseEntity createUser(@Valid @RequestBody final CreateUserRequest request) {
 
 		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
-				== null || request
-				.getPublicKey
-						() == null) {
+				== null || request.getPublicKey	() == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 

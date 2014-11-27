@@ -80,7 +80,7 @@ public class DefaultUserService implements UserService {
 
 			authorization = new String(Base64.decodeBase64(authorization.substring(5).getBytes()));
 
-			if (authorization != null && authorization.matches(AUTHORIZATION_PATTERN)) {
+			if (authorization.matches(AUTHORIZATION_PATTERN)) {
 
 				final String[] parts = authorization.split(":");
 				final String username = parts[0];

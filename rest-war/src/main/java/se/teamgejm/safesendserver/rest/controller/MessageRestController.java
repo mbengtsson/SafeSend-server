@@ -132,10 +132,9 @@ public class MessageRestController {
 			final UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
 					message.getSender().getDisplayName());
 			final UserResponse receiver = new UserResponse(message.getReceiver().getId(),
-					message.getReceiver().getEmail(),
-					message.getReceiver().getDisplayName());
-			newMessages.add(new NewMessagesResponse(message.getId(), sender, receiver, message.getTimeStamp().getMillis
-					()));
+					message.getReceiver().getEmail(), message.getReceiver().getDisplayName());
+			newMessages.add(new NewMessagesResponse(message.getId(), sender, receiver,
+					message.getTimeStamp().getMillis()));
 		}
 
 		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);

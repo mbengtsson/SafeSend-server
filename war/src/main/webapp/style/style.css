@@ -35,10 +35,13 @@ div#key {
     padding: 20px;
     display: inline-block;
     margin-bottom: 10px;
+    width: 45em;
 }
 
-div#key pre {
+div#key p {
+    font-family: monospace;
     font-size: medium;
+    word-wrap: break-word;
 }
 
 .clear {
