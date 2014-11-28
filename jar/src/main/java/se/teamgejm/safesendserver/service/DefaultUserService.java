@@ -20,8 +20,9 @@ public class DefaultUserService implements UserService {
 	private static final String DISPLAYNAME_PATTERN = "[A-Za-z0-9. ]{4,}";
 	private static final String EMAIL_PATTERN = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@" +
 			"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-	private static final String PASSWORD_PATTERN = "{1}.+";
+	private static final String PASSWORD_PATTERN = "{8}.+";
 	private static final String AUTHORIZATION_PATTERN = EMAIL_PATTERN + ":" + PASSWORD_PATTERN;
+	private static final String PUBKEY_PATTERN = "(-----BEGIN PGP PUBLIC KEY BLOCK-----)([\\s\\S]+)(-----END PGP PUBLIC KEY BLOCK-----)";
 
 	private static final String AUTHORIZATION_TYPE = "Basic";
 
@@ -35,6 +36,7 @@ public class DefaultUserService implements UserService {
 	public User createUser(final User user) {
 
 		if (validateUserData(user)) {
+			user.setPassword(passHash.generateHash(user.getPassword()));
 			final long id = userDao.persist(user);
 
 			return getUser(id);
@@ -115,8 +117,17 @@ public class DefaultUserService implements UserService {
 		return false;
 	}
 
+	/**
+	 * Validates if user contains a valid email, diaplay-name, password and public key
+	 *
+	 * @param user user to test
+	 * @return true if user data is valid
+	 */
 	private boolean validateUserData(final User user) {
 
-		return user.getEmail().matches(EMAIL_PATTERN) && user.getDisplayName().matches(DISPLAYNAME_PATTERN);
+		final String pubKey = new String(Base64.decodeBase64(user.getPublicKey().getBytes())).trim();
+
+		return user.getEmail().matches(EMAIL_PATTERN) && user.getDisplayName().matches(DISPLAYNAME_PATTERN) &&
+				user.getPassword().matches(PASSWORD_PATTERN) && pubKey.matches(PUBKEY_PATTERN);
 	}
 }

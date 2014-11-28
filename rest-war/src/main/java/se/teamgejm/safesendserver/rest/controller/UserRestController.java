@@ -116,12 +116,11 @@ public class UserRestController {
 	public ResponseEntity createUser(@Valid @RequestBody final CreateUserRequest request) {
 
 		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
-				== null || request.getPublicKey	() == null) {
+				== null || request.getPublicKey() == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
-		User user = new User(request.getEmail(), request.getDisplayName(), passHash.generateHash(request
-				.getPassword()),
+		User user = new User(request.getEmail(), request.getDisplayName(), request.getPassword(),
 				request.getPublicKey());
 
 		if (!userService.getAllUsers().contains(user)) {
