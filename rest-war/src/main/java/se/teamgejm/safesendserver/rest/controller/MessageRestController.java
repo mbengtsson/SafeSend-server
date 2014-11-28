@@ -32,10 +32,8 @@ public class MessageRestController {
 
 	@Inject
 	private UserService userService;
-
 	@Inject
 	private MessageService messageService;
-
 	@Inject
 	private LogService logService;
 
@@ -56,21 +54,21 @@ public class MessageRestController {
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		if (request == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-		}
-
 		final User receiver = userService.getUser(request.getReceiverId());
 
 		if (receiver == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
-		final Message message = new Message(request.getMessage(), authorizedUser, receiver, DateTime.now());
-		messageService.createMessage(message);
+		final Message message = messageService.createMessage(new Message(request.getMessage(), authorizedUser,
+				receiver, DateTime.now()));
 
-		logService.createLogEntry(new LogEntry(authorizedUser.getId(), request.getReceiverId(),
-				ObjectType.TEXT_MESSAGE, Verb.SEND, DateTime.now()));
+		if (message != null) {
+			logService.createLogEntry(new LogEntry(authorizedUser.getId(), request.getReceiverId(),
+					ObjectType.TEXT_MESSAGE, Verb.SEND, DateTime.now()));
+		} else {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
 
 		return new ResponseEntity<String>("", HttpStatus.OK);
 	}

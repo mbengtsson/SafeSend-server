@@ -20,7 +20,7 @@ public class DefaultUserService implements UserService {
 	private static final String DISPLAYNAME_PATTERN = "[A-Za-z0-9. ]{4,}";
 	private static final String EMAIL_PATTERN = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@" +
 			"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-	private static final String PASSWORD_PATTERN = "{8}.+";
+	private static final String PASSWORD_PATTERN = ".{8,}";
 	private static final String AUTHORIZATION_PATTERN = EMAIL_PATTERN + ":" + PASSWORD_PATTERN;
 	private static final String PUBKEY_PATTERN = "(-----BEGIN PGP PUBLIC KEY BLOCK-----)([\\s\\S]+)(-----END PGP PUBLIC KEY BLOCK-----)";
 
@@ -120,7 +120,7 @@ public class DefaultUserService implements UserService {
 	/**
 	 * Validates if user contains a valid email, diaplay-name, password and public key
 	 *
-	 * @param user user to test
+	 * @param user user to validate
 	 * @return true if user data is valid
 	 */
 	private boolean validateUserData(final User user) {

@@ -13,7 +13,6 @@ import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
 import se.teamgejm.safesendserver.rest.model.request.ValidateCredentialsRequest;
 import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
-import se.teamgejm.safesendserver.security.PasswordHasher;
 import se.teamgejm.safesendserver.service.FloodService;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
@@ -38,8 +37,6 @@ public class UserRestController {
 	private LogService logService;
 	@Inject
 	private FloodService floodService;
-	@Inject
-	private PasswordHasher passHash;
 
 	/**
 	 * REST-endpoint that returns a list of all users. Requires authorization.
@@ -77,10 +74,6 @@ public class UserRestController {
 		final int ipThreshold = 60;
 		final int userThreshold = 6;
 
-		if (body == null || body.getEmail() == null || body.getPassword() == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-		}
-
 		// Check IP-based flood access.
 		if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, request.getRemoteAddr(), ipThreshold)) {
 			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
@@ -114,11 +107,6 @@ public class UserRestController {
 	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
 			produces = "application/json")
 	public ResponseEntity createUser(@Valid @RequestBody final CreateUserRequest request) {
-
-		if (request == null || request.getEmail() == null || request.getDisplayName() == null || request.getPassword()
-				== null || request.getPublicKey() == null) {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-		}
 
 		User user = new User(request.getEmail(), request.getDisplayName(), request.getPassword(),
 				request.getPublicKey());

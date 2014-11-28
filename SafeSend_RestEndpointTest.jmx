@@ -140,6 +140,12 @@
             <stringProp name="Argument.desc">valid public key</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="message" elementType="Argument">
+            <stringProp name="Argument.name">message</stringProp>
+            <stringProp name="Argument.value">LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tClZlcnNpb246IEJDUEcgdkBSRUxFQVNFX05BTUVACgpoUVFPQS96T3dMeFkxOXhLRUEvN0JZekRWV1hOSTA1YnlMRWt6VjZjYmtHTmFINDhFREJENVJkQXM1Kzg4SDhYCmhiSmdCVVl6bTNLZ0FwM2VnUDFoa1RIUlpwNDdZQlNMYU9Fa1JwSHQzQUZZVHIrZUVZdzNLTkIyb3lOZ2U2b3IKTkV4VDRkSmFsQmJPWWs3SXZHTjVyV215M3RyMzdUM3BPa2J2YlRiYXl1ZFlxMGxSZCtXZllpbDYydWlBbWtTcQpkN3V5MS8ybGFSQkRxdGRRVkdibmZjaXZ4VHExdXNsN0FWNnlTWURCS0NkQ2w0cVVTamxPb2JQUzA0S2FzdGxDCnYwSzVnVHhaeGdhSTJRWm95ZEpLakRWTXlTVmx4Nmpxa2twbGJQUStqQ1VPOUlpcHRMRm5hV3F2b2oxWHNBOUsKdFF1bVltSXpjYWxKaEFmNmVlRnE0aXJBWUFtYThPb1RnT1pyRGQ4VS91bW5KMDJjb0tRQityQmVrUm1pR2VsVQoxbkNBM080cFFPeG5GZmhFakc0Yk95VE02Q3ZBOVRrWE94eXdFaldNVTJ0UVZzUWtqZVVMMlVmbUFCblh6L3U0CnlpUXplaXBCc0VRcmgxTFROT2lvTHVMZm1XdWIxbGp1UzNpcTZxUEtkbnczZVhnOXVVdDdyTHU1d0Z5Q3dyN3kKY2VVM0YrTWZ3bW9Vc05YR0RVeElTL1VHQi9wVmN4SW1hTTllb3dCUDdVdmNJRXRqNG9vTlF2ZVBxSlFqTkZURgpXYzBrZlhhd1FwSlpTOUxlU0VnRW1TbEtHU0dSdVBGblRrM1hqK0Irb1JTOGhabHNYbDJEZCtQa0RiZDlVdzFjCnU5RU5YQ1dXem96dWlleHd5OUNwK0p4eHFFUWhSZVBybHo4eU9tWE1TdWo0UGpTRkhYS3oxYTZ5RVZCR0xFQVAKLzFFdWNIaTdGS1RzaXQ2djlmcEtvRzlNcG56SzdadjZMNWwyZmt4MFBNcGZXYTJ6UVJ0bC9vV3RRSjhYaC9aMAppcDZDK25HSzFRb01pUXBRUnpVckRVMWZqbG03VGhoWjhuZ2NBUFVXSitaYkVLMGtsYmF4aFlTa1M1SDJ4K3d5CndEdERGd01lUG95bFV2VFA5TDJvM1luZTJMTWxaeHFzcFU4UFVGYklEREdXS0pvSGw2Q21NZEhEZHFtYnhubFMKV1QzUUZkT05yaitlQTJzdExza2JjUGpsVHhDRGlnMXA5SGdlNmZ5N2U4bUZ1OGphZmNwNzRnMGozTzhGZDlCbApSaGloUlZBVkEzS2ZiU09VSUFHNWVqQzZXcEdabEZSWlk2NHhSVTlxazBwM3lEU2U0VlpBU283Umw1RU5Pa3RBCmk0MDlSL1BZck9POElDUDlJbmxSUWhqTkQ2V2puM3NHYkNKUUtsekpQMlE0NHBQbmR3N3o5YXVIcUUvNWNaZkUKcmdJTFkwaStGWDBFeE55b24rTTB6WE1POVNCTmd0Y2pOcGgrZ3A1YVRYT1ZUT0RBNStJTjdsVGJSV05SMHh0cAorYTJMNjZHN2djTkFadjc3a1JKME5NSDNkUFJZc0h1WnYydDJ5T3NudWxQUnlEMmZteXZrNXlMd0JDT0FicjhlCmRXRnovZlpickRic1Y4NlE4a0dFMlZmeFU0SU1QMjZWbStzcTU4bUYvQTArd0NiNHZKVklrZXlyWjdHcVFQWWwKTDQvN2JZbzlOdXJ0OVJjTGtFM2V2T3VtZUJVTXU5d21pTGtmR1p6bmFHVVdIRFpFYit1SE9JZGVvRlRQSitKbQo3YnJiclVoU3BPYTY2TnVWTkI1ZDVxVjQyOXM5eEx3VFdWVjhueEI0S0lFWXlhc0dmeWwxZWg3SURZZkxFZWR5CnR0T1gyZDUvNlNnbXBieEpVaUtJSG9nMXg1aVhkR2pMZlkrWk9kYjhlTHJ0WEExeHc1RzJQTC9WeUFNazIwRVMKSnUvZ2xIeHdCV3JqSEpYR0FwWkhWaDU4YmJxYjkyMVUyL1RucE9UM1puVisrSFdBd1B6cU84d0hDczUxOVJkagpNVjNTcDFHNUQrSG1ON3hUZnRoSUJJZ0Q0MElaaTl0cXlwNlF1TFNmeitkM0ROeXpITElGckJBZEZlMkIwYjlCCnczVTFrUXgxbCtRWGNkR3dtMzA9Cj1vNTRECi0tLS0tRU5EIFBHUCBNRVNTQUdFLS0tLS0K</stringProp>
+            <stringProp name="Argument.desc">valid message</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -511,7 +517,7 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
     &quot;receiverId&quot;: &quot;${id}&quot;,&#xd;
-    &quot;message&quot;: &quot;message text&quot;&#xd;
+    &quot;message&quot;: &quot;${message}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
