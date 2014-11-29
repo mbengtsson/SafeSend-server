@@ -4,15 +4,15 @@ import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.teamgejm.safesendserver.domain.floodevent.FloodType;
 import se.teamgejm.safesendserver.domain.logentry.LogEntry;
 import se.teamgejm.safesendserver.domain.logentry.ObjectType;
 import se.teamgejm.safesendserver.domain.logentry.Verb;
 import se.teamgejm.safesendserver.domain.user.User;
 import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
 import se.teamgejm.safesendserver.rest.model.request.ValidateCredentialsRequest;
-import se.teamgejm.safesendserver.rest.model.response.GetPublicKeyResponse;
+import se.teamgejm.safesendserver.rest.model.response.PublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
+import se.teamgejm.safesendserver.rest.security.FloodManager;
 import se.teamgejm.safesendserver.service.FloodService;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
@@ -45,18 +45,28 @@ public class UserRestController {
 	 * @return list of all users
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getAllUsers(@RequestHeader("Authorization") final String authorization) {
+	public ResponseEntity getAllUsers(@RequestHeader("Authorization") final String authorization,
+			final HttpServletRequest request) {
+
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
+				FloodManager.getEmailFromAuthorization(authorization));
+
+		if (floodManager.isBlocked()) {
+			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		}
 
 		if (!userService.checkAuthorization(authorization)) {
+			floodManager.registerFailedLoginAttempt();
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
 		final List<UserResponse> userList = new ArrayList<UserResponse>();
 
 		for (User user : userService.getAllUsers()) {
-			userList.add(new UserResponse(user.getId(), user.getEmail(), user.getDisplayName()));
+			userList.add(new UserResponse(user));
 		}
 
+		floodManager.resetAttempts();
 		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
 	}
 
@@ -71,60 +81,50 @@ public class UserRestController {
 	@RequestMapping(value = "/users/validate_credentials", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity validateUserCredentials(@Valid @RequestBody final ValidateCredentialsRequest body,
 			final HttpServletRequest request) {
-		final int ipThreshold = 60;
-		final int userThreshold = 6;
 
-		// Check IP-based flood access.
-		if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, request.getRemoteAddr(), ipThreshold)) {
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(), body.getEmail());
+
+		if (floodManager.isBlocked()) {
 			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
 		}
 
-		// Check user-IP-based flood access.
-		if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr(), userThreshold)) {
-			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		if (!userService.checkAuthorization(body.getEmail(), body.getPassword())) {
+			floodManager.registerFailedLoginAttempt();
+			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		if (userService.checkAuthorization(body.getEmail(), body.getPassword())) {
-			floodService.purgeEvents(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr());
-			return new ResponseEntity<String>("", HttpStatus.OK);
-		}
+		floodManager.resetAttempts();
+		return new ResponseEntity<String>("", HttpStatus.OK);
 
-		// Register a user-IP-based failed event.
-		floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, body.getEmail() + "-" + request.getRemoteAddr());
-
-		// Always register an IP-based failed event.
-		floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, request.getRemoteAddr());
-
-		return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 	}
 
 	/**
 	 * REST-endpoint for creating a new user
 	 *
-	 * @param request new user request in json (see API-doc)
+	 * @param body new user request in json (see API-doc)
 	 * @return the created user
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json",
 			produces = "application/json")
-	public ResponseEntity createUser(@Valid @RequestBody final CreateUserRequest request) {
+	public ResponseEntity createUser(@Valid @RequestBody final CreateUserRequest body) {
 
-		User user = new User(request.getEmail(), request.getDisplayName(), request.getPassword(),
-				request.getPublicKey());
+		User user = new User(body.getEmail(), body.getDisplayName(), body.getPassword(),
+				body.getPublicKey());
 
-		if (!userService.getAllUsers().contains(user)) {
-			user = userService.createUser(user);
-		} else {
+		if (userService.getAllUsers().contains(user)) {
 			return new ResponseEntity<String>("", HttpStatus.CONFLICT);
 		}
 
-		if (user != null) {
-			logService.createLogEntry(new LogEntry(user.getId(), user.getId(),
-					ObjectType.USER, Verb.CREATE, DateTime.now()));
-		} else {
+		user = userService.createUser(user);
+
+		if (user == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getEmail(),
-				user.getDisplayName()), HttpStatus.OK);
+
+		logService.createLogEntry(new LogEntry(user.getId(), user.getId(), ObjectType.USER, Verb.CREATE,
+				DateTime.now()));
+
+		return new ResponseEntity<UserResponse>(new UserResponse(user), HttpStatus.OK);
 
 	}
 
@@ -137,9 +137,17 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity getUser(@RequestHeader("Authorization") final String authorization,
-			@PathVariable final long id) {
+			@PathVariable final long id, final HttpServletRequest request) {
+
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
+				FloodManager.getEmailFromAuthorization(authorization));
+
+		if (floodManager.isBlocked()) {
+			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		}
 
 		if (!userService.checkAuthorization(authorization)) {
+			floodManager.registerFailedLoginAttempt();
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
@@ -149,8 +157,8 @@ public class UserRestController {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<UserResponse>(new UserResponse(user.getId(), user.getDisplayName(), user.getEmail()),
-				HttpStatus.OK);
+		floodManager.resetAttempts();
+		return new ResponseEntity<UserResponse>(new UserResponse(user), HttpStatus.OK);
 
 	}
 
@@ -163,9 +171,17 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/users/{id}/pubkey", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity getPublicKey(@RequestHeader("Authorization") final String authorization,
-			@PathVariable final long id) {
+			@PathVariable final long id, final HttpServletRequest request) {
+
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
+				FloodManager.getEmailFromAuthorization(authorization));
+
+		if (floodManager.isBlocked()) {
+			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		}
 
 		if (!userService.checkAuthorization(authorization)) {
+			floodManager.registerFailedLoginAttempt();
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
@@ -175,6 +191,7 @@ public class UserRestController {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<GetPublicKeyResponse>(new GetPublicKeyResponse(id, user.getPublicKey()), HttpStatus.OK);
+		floodManager.resetAttempts();
+		return new ResponseEntity<PublicKeyResponse>(new PublicKeyResponse(user), HttpStatus.OK);
 	}
 }

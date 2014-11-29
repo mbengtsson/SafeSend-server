@@ -1,5 +1,7 @@
 package se.teamgejm.safesendserver.rest.model.response;
 
+import se.teamgejm.safesendserver.domain.user.User;
+
 /**
  * User response bean
  *
@@ -12,6 +14,12 @@ public class UserResponse {
 	private String email;
 
 	private String displayName;
+
+	public UserResponse(User user) {
+		this.id = user.getId();
+		this.email = user.getEmail();
+		this.displayName = user.getDisplayName();
+	}
 
 	public UserResponse(long id, String email, String displayName) {
 		this.id = id;

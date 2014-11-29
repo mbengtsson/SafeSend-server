@@ -1,11 +1,13 @@
 package se.teamgejm.safesendserver.rest.model.response;
 
+import se.teamgejm.safesendserver.domain.message.Message;
+
 /**
  * ReceiveMessage response bean
  *
  * @author Marcus Bengtsson
  */
-public class ReceiveMessageResponse {
+public class MessageResponse {
 
 	private UserResponse sender;
 
@@ -17,7 +19,15 @@ public class ReceiveMessageResponse {
 
 	private long timeStamp;
 
-	public ReceiveMessageResponse(UserResponse sender, UserResponse receiver, String senderPublicKey, String message,
+	public MessageResponse(Message message) {
+		this.sender = new UserResponse(message.getSender());
+		this.receiver = new UserResponse(message.getReceiver());
+		this.senderPublicKey = message.getSender().getPublicKey();
+		this.message = message.getMessage();
+		this.timeStamp = message.getTimeStamp().getMillis();
+	}
+
+	public MessageResponse(UserResponse sender, UserResponse receiver, String senderPublicKey, String message,
 			long timeStamp) {
 		this.sender = sender;
 		this.receiver = receiver;

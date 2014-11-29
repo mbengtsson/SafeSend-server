@@ -10,14 +10,16 @@ import se.teamgejm.safesendserver.domain.logentry.Verb;
 import se.teamgejm.safesendserver.domain.message.Message;
 import se.teamgejm.safesendserver.domain.user.User;
 import se.teamgejm.safesendserver.rest.model.request.SendMessageRequest;
-import se.teamgejm.safesendserver.rest.model.response.NewMessagesResponse;
-import se.teamgejm.safesendserver.rest.model.response.ReceiveMessageResponse;
-import se.teamgejm.safesendserver.rest.model.response.UserResponse;
+import se.teamgejm.safesendserver.rest.model.response.MessageListResponse;
+import se.teamgejm.safesendserver.rest.model.response.MessageResponse;
+import se.teamgejm.safesendserver.rest.security.FloodManager;
+import se.teamgejm.safesendserver.service.FloodService;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.MessageService;
 import se.teamgejm.safesendserver.service.UserService;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,40 +38,51 @@ public class MessageRestController {
 	private MessageService messageService;
 	@Inject
 	private LogService logService;
+	@Inject
+	private FloodService floodService;
 
 	/**
 	 * REST-endpoint used to send a message. Requires authorization.
 	 *
 	 * @param authorization Authorization-header "Basic [username:password]" where [username:password] is base64-encoded
-	 * @param request       the message-request in json (see API-doc)
+	 * @param body          the message-request in json (see API-doc)
 	 * @return
 	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity sendMessage(@RequestHeader("Authorization") final String authorization,
-			@Valid @RequestBody final SendMessageRequest request) {
+			@Valid @RequestBody final SendMessageRequest body, final HttpServletRequest request) {
+
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
+				FloodManager.getEmailFromAuthorization(authorization));
+
+		if (floodManager.isBlocked()) {
+			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		}
 
 		final User authorizedUser = userService.getAuthorizedUser(authorization);
 
 		if (authorizedUser == null) {
+			floodManager.registerFailedLoginAttempt();
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		final User receiver = userService.getUser(request.getReceiverId());
+		final User receiver = userService.getUser(body.getReceiverId());
 
 		if (receiver == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
-		final Message message = messageService.createMessage(new Message(request.getMessage(), authorizedUser,
+		final Message message = messageService.createMessage(new Message(body.getMessage(), authorizedUser,
 				receiver, DateTime.now()));
 
-		if (message != null) {
-			logService.createLogEntry(new LogEntry(authorizedUser.getId(), request.getReceiverId(),
-					ObjectType.TEXT_MESSAGE, Verb.SEND, DateTime.now()));
-		} else {
+		if (message == null) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
+		logService.createLogEntry(new LogEntry(authorizedUser.getId(), body.getReceiverId(),
+				ObjectType.TEXT_MESSAGE, Verb.SEND, DateTime.now()));
+
+		floodManager.resetAttempts();
 		return new ResponseEntity<String>("", HttpStatus.OK);
 	}
 
@@ -82,7 +95,14 @@ public class MessageRestController {
 	 */
 	@RequestMapping(value = "/messages/{id}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity receiveMessage(@RequestHeader("Authorization") final String authorization,
-			@PathVariable final long id) {
+			@PathVariable final long id, final HttpServletRequest request) {
+
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
+				FloodManager.getEmailFromAuthorization(authorization));
+
+		if (floodManager.isBlocked()) {
+			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		}
 
 		final Message message = messageService.getMessage(id);
 
@@ -93,20 +113,17 @@ public class MessageRestController {
 		final User authorizedUser = userService.getAuthorizedUser(authorization);
 
 		if (authorizedUser == null || !authorizedUser.equals(message.getReceiver())) {
+			floodManager.registerFailedLoginAttempt();
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
 		messageService.removeMessage(message);
-		final UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
-				message.getSender().getDisplayName());
-		final UserResponse receiver = new UserResponse(message.getReceiver().getId(), message.getReceiver().getEmail(),
-				message.getReceiver().getDisplayName());
+
 		logService.createLogEntry(new LogEntry(message.getSender().getId(), message.getReceiver().getId(),
 				ObjectType.TEXT_MESSAGE, Verb.RECEIVE, DateTime.now()));
 
-		return new ResponseEntity<ReceiveMessageResponse>(new ReceiveMessageResponse(sender, receiver,
-				message.getSender().getPublicKey(), message.getMessage(), message.getTimeStamp().getMillis()),
-				HttpStatus.OK);
+		floodManager.resetAttempts();
+		return new ResponseEntity<MessageResponse>(new MessageResponse(message), HttpStatus.OK);
 	}
 
 	/**
@@ -116,26 +133,33 @@ public class MessageRestController {
 	 * @return list of messages
 	 */
 	@RequestMapping(value = "/messages", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity listMessages(@RequestHeader("Authorization") final String authorization) {
+	public ResponseEntity listMessages(@RequestHeader("Authorization") final String authorization,
+			final HttpServletRequest request) {
+
+		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
+				FloodManager.getEmailFromAuthorization(authorization));
+
+		if (floodManager.isBlocked()) {
+			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
+		}
 
 		final User authorizedUser = userService.getAuthorizedUser(authorization);
 
 		if (authorizedUser == null) {
+			floodManager.registerFailedLoginAttempt();
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		final List<NewMessagesResponse> newMessages = new ArrayList<NewMessagesResponse>();
+		final List<MessageListResponse> newMessages = new ArrayList<MessageListResponse>();
 
 		for (Message message : messageService.getMessagesByReceiver(authorizedUser)) {
-			final UserResponse sender = new UserResponse(message.getSender().getId(), message.getSender().getEmail(),
-					message.getSender().getDisplayName());
-			final UserResponse receiver = new UserResponse(message.getReceiver().getId(),
-					message.getReceiver().getEmail(), message.getReceiver().getDisplayName());
-			newMessages.add(new NewMessagesResponse(message.getId(), sender, receiver,
-					message.getTimeStamp().getMillis()));
+
+			newMessages.add(new MessageListResponse(message));
 		}
 
-		return new ResponseEntity<List<NewMessagesResponse>>(newMessages, HttpStatus.OK);
+		floodManager.resetAttempts();
+		return new ResponseEntity<List<MessageListResponse>>(newMessages, HttpStatus.OK);
 
 	}
+
 }

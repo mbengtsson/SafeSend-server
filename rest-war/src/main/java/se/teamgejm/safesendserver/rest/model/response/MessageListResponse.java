@@ -1,11 +1,13 @@
 package se.teamgejm.safesendserver.rest.model.response;
 
+import se.teamgejm.safesendserver.domain.message.Message;
+
 /**
  * NewMessages response bean
  *
  * @author Marcus Bengtsson
  */
-public class NewMessagesResponse {
+public class MessageListResponse {
 
 	private long id;
 
@@ -15,7 +17,14 @@ public class NewMessagesResponse {
 
 	private long timeStamp;
 
-	public NewMessagesResponse(long id, UserResponse sender, UserResponse receiver, long timeStamp) {
+	public MessageListResponse(Message message) {
+		this.id = message.getId();
+		this.sender = new UserResponse(message.getSender());
+		this.receiver = new UserResponse(message.getReceiver());
+		this.timeStamp = message.getTimeStamp().getMillis();
+	}
+
+	public MessageListResponse(long id, UserResponse sender, UserResponse receiver, long timeStamp) {
 		this.id = id;
 		this.sender = sender;
 		this.receiver = receiver;

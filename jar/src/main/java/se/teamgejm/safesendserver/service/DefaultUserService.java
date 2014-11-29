@@ -77,26 +77,40 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public User getAuthorizedUser(String authorization) {
-		if (authorization.substring(0, 5).equals(AUTHORIZATION_TYPE)) {
+	public User getAuthorizedUser(final String authorization) {
 
-			authorization = new String(Base64.decodeBase64(authorization.substring(5).getBytes()));
-
-			if (authorization.matches(AUTHORIZATION_PATTERN)) {
-
-				final String[] parts = authorization.split(":");
-				final String username = parts[0];
-				final String password = parts[1];
-				final User user = getUserByUsername(username);
-
-				if (user != null) {
-					final String correctHash = user.getPassword();
-
-					return passHash.validatePassword(password, correctHash) ? user : null;
-				}
-			}
+		if (authorization == null || authorization.length() < 5) {
+			return null;
 		}
-		return null;
+
+		if (!authorization.substring(0, 5).equals(AUTHORIZATION_TYPE)) {
+			return null;
+		}
+
+		final byte[] authBytes = authorization.substring(5).getBytes();
+
+		if (!Base64.isArrayByteBase64(authBytes)) {
+			return null;
+		}
+
+		final String plainAuth = new String(Base64.decodeBase64(authBytes));
+
+		if (!plainAuth.matches(AUTHORIZATION_PATTERN)) {
+			return null;
+		}
+
+		final String[] parts = authorization.split(":");
+		final String email = parts[0];
+		final String password = parts[1];
+		final User user = getUserByUsername(email);
+
+		if (user == null) {
+			return null;
+		}
+
+		final String correctHash = user.getPassword();
+		return passHash.validatePassword(password, correctHash) ? user : null;
+
 	}
 
 	@Override
