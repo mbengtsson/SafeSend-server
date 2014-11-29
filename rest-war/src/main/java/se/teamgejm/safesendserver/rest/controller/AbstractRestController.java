@@ -1,29 +1,25 @@
-package se.teamgejm.safesendserver.rest.security;
+package se.teamgejm.safesendserver.rest.controller;
 
 import org.apache.commons.codec.binary.Base64;
 import se.teamgejm.safesendserver.domain.floodevent.FloodType;
 import se.teamgejm.safesendserver.service.FloodService;
 
+import javax.inject.Inject;
+
 /**
- * Created by Marcus Bengtsson on 2014-11-29.
+ * Abstract class other REST controllers can extend to get some handy methods for flood-control
+ *
+ * @author Marcus Bengtsson
  */
+public abstract class AbstractRestController {
 
-public class FloodManager {
+	private final static int IP_THRESHOLD = 60;
+	private final static int USER_THRESHOLD = 6;
 
-	final static private int IP_THRESHOLD = 60;
-	final static private int USER_THRESHOLD = 6;
+	@Inject
+	private FloodService floodService;
 
-	final private FloodService floodService;
-	final private String ipAddress;
-	final private String email;
-
-	public FloodManager(final FloodService floodService, final String ipAddress, final String email) {
-		this.floodService = floodService;
-		this.ipAddress = ipAddress;
-		this.email = email;
-	}
-
-	public static String getEmailFromAuthorization(String authorization) {
+	protected String getEmailFromAuthorization(String authorization) {
 
 		if (authorization == null || authorization.length() < 5) {
 			return null;
@@ -39,7 +35,7 @@ public class FloodManager {
 
 	}
 
-	public void registerFailedLoginAttempt() {
+	protected void registerFailedLoginAttempt(final String ipAddress, final String email) {
 
 		if (email != null) {
 			floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, email + "-" + ipAddress);
@@ -48,11 +44,11 @@ public class FloodManager {
 		floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, ipAddress);
 	}
 
-	public void resetAttempts() {
+	protected void resetAttempts(final String ipAddress, final String email) {
 		floodService.purgeEvents(FloodType.FAILED_VALIDATE_CREDENTIALS, email + "-" + ipAddress);
 	}
 
-	public boolean isBlocked() {
+	protected boolean isBlocked(final String ipAddress, final String email) {
 
 		if (email == null) {
 			return true;
@@ -68,5 +64,4 @@ public class FloodManager {
 
 		return false;
 	}
-
 }

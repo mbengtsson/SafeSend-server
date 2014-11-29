@@ -12,8 +12,6 @@ import se.teamgejm.safesendserver.rest.model.request.CreateUserRequest;
 import se.teamgejm.safesendserver.rest.model.request.ValidateCredentialsRequest;
 import se.teamgejm.safesendserver.rest.model.response.PublicKeyResponse;
 import se.teamgejm.safesendserver.rest.model.response.UserResponse;
-import se.teamgejm.safesendserver.rest.security.FloodManager;
-import se.teamgejm.safesendserver.service.FloodService;
 import se.teamgejm.safesendserver.service.LogService;
 import se.teamgejm.safesendserver.service.UserService;
 
@@ -24,19 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * REST-controller containing /users endpoints
+ * REST-controller containing /users endpoints, all endpoints requiering authorization is flood-controlld to avoid
+ * brute-force attacks against them
  *
  * @author Marcus Bengtsson
  */
 @RestController
-public class UserRestController {
+public class UserRestController extends AbstractRestController {
 
 	@Inject
 	private UserService userService;
 	@Inject
 	private LogService logService;
-	@Inject
-	private FloodService floodService;
 
 	/**
 	 * REST-endpoint that returns a list of all users. Requires authorization.
@@ -48,15 +45,12 @@ public class UserRestController {
 	public ResponseEntity getAllUsers(@RequestHeader("Authorization") final String authorization,
 			final HttpServletRequest request) {
 
-		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
-				FloodManager.getEmailFromAuthorization(authorization));
-
-		if (floodManager.isBlocked()) {
+		if (isBlocked(request.getRemoteAddr(), getEmailFromAuthorization(authorization))) {
 			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
 		}
 
 		if (!userService.checkAuthorization(authorization)) {
-			floodManager.registerFailedLoginAttempt();
+			registerFailedLoginAttempt(request.getRemoteAddr(), getEmailFromAuthorization(authorization));
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
@@ -66,14 +60,12 @@ public class UserRestController {
 			userList.add(new UserResponse(user));
 		}
 
-		floodManager.resetAttempts();
+		resetAttempts(request.getRemoteAddr(), getEmailFromAuthorization(authorization));
 		return new ResponseEntity<List<UserResponse>>(userList, HttpStatus.OK);
 	}
 
 	/**
 	 * REST-endpoint for validation user credentials
-	 * <p/>
-	 * This method is flood controlled.
 	 *
 	 * @param request validate credentials request
 	 * @return 200 if the validation succeed, otherwise 401
@@ -82,18 +74,16 @@ public class UserRestController {
 	public ResponseEntity validateUserCredentials(@Valid @RequestBody final ValidateCredentialsRequest body,
 			final HttpServletRequest request) {
 
-		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(), body.getEmail());
-
-		if (floodManager.isBlocked()) {
+		if (isBlocked(request.getRemoteAddr(), body.getEmail())) {
 			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
 		}
 
 		if (!userService.checkAuthorization(body.getEmail(), body.getPassword())) {
-			floodManager.registerFailedLoginAttempt();
+			registerFailedLoginAttempt(request.getRemoteAddr(), body.getEmail());
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
-		floodManager.resetAttempts();
+		resetAttempts(request.getRemoteAddr(), body.getEmail());
 		return new ResponseEntity<String>("", HttpStatus.OK);
 
 	}
@@ -139,15 +129,12 @@ public class UserRestController {
 	public ResponseEntity getUser(@RequestHeader("Authorization") final String authorization,
 			@PathVariable final long id, final HttpServletRequest request) {
 
-		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
-				FloodManager.getEmailFromAuthorization(authorization));
-
-		if (floodManager.isBlocked()) {
+		if (isBlocked(request.getRemoteAddr(), getEmailFromAuthorization(authorization))) {
 			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
 		}
 
 		if (!userService.checkAuthorization(authorization)) {
-			floodManager.registerFailedLoginAttempt();
+			registerFailedLoginAttempt(request.getRemoteAddr(), getEmailFromAuthorization(authorization));
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
@@ -157,7 +144,7 @@ public class UserRestController {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 		}
 
-		floodManager.resetAttempts();
+		resetAttempts(request.getRemoteAddr(), getEmailFromAuthorization(authorization));
 		return new ResponseEntity<UserResponse>(new UserResponse(user), HttpStatus.OK);
 
 	}
@@ -173,15 +160,12 @@ public class UserRestController {
 	public ResponseEntity getPublicKey(@RequestHeader("Authorization") final String authorization,
 			@PathVariable final long id, final HttpServletRequest request) {
 
-		final FloodManager floodManager = new FloodManager(floodService, request.getRemoteAddr(),
-				FloodManager.getEmailFromAuthorization(authorization));
-
-		if (floodManager.isBlocked()) {
+		if (isBlocked(request.getRemoteAddr(), getEmailFromAuthorization(authorization))) {
 			return new ResponseEntity<String>("", HttpStatus.TOO_MANY_REQUESTS);
 		}
 
 		if (!userService.checkAuthorization(authorization)) {
-			floodManager.registerFailedLoginAttempt();
+			registerFailedLoginAttempt(request.getRemoteAddr(), getEmailFromAuthorization(authorization));
 			return new ResponseEntity<String>("", HttpStatus.UNAUTHORIZED);
 		}
 
@@ -191,7 +175,8 @@ public class UserRestController {
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 		}
 
-		floodManager.resetAttempts();
+		resetAttempts(request.getRemoteAddr(), getEmailFromAuthorization(authorization));
 		return new ResponseEntity<PublicKeyResponse>(new PublicKeyResponse(user), HttpStatus.OK);
 	}
+
 }

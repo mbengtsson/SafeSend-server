@@ -99,7 +99,7 @@ public class DefaultUserService implements UserService {
 			return null;
 		}
 
-		final String[] parts = authorization.split(":");
+		final String[] parts = plainAuth.split(":");
 		final String email = parts[0];
 		final String password = parts[1];
 		final User user = getUserByUsername(email);
