@@ -41,6 +41,8 @@
                     <form:select path="role">
                         <form:options items="${roles}"/>
                     </form:select>
+                    <input type="hidden" name="${_csrf.parameterName}"
+                           value="${_csrf.token}"/>
                     <a href="javascript:{}" onclick="document.getElementById('user').submit(); return false;">Change</a>
 
                 </td>
