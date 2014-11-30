@@ -23,7 +23,7 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
 	public void onApplicationEvent(final AuthenticationSuccessEvent event) {
 		final String email = event.getAuthentication().getPrincipal().toString();
 
-		floodService.purgeEvents(FloodType.FAILED_VALIDATE_CREDENTIALS, email);
+		floodService.purgeEvents(FloodType.FAILED_WEB_LOGIN, email);
 
 	}
 }

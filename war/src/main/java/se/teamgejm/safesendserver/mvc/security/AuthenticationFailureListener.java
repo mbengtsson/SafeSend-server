@@ -24,7 +24,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 	public void onApplicationEvent(final AuthenticationFailureBadCredentialsEvent event) {
 		final String email = event.getAuthentication().getPrincipal().toString();
 
-		floodService.registerEvent(FloodType.FAILED_VALIDATE_CREDENTIALS, email);
+		floodService.registerEvent(FloodType.FAILED_WEB_LOGIN, email);
 
 	}
 

@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
-		if (!floodService.isAllowed(FloodType.FAILED_VALIDATE_CREDENTIALS, username, userThreshold)) {
+		if (!floodService.isAllowed(FloodType.FAILED_WEB_LOGIN, username, userThreshold)) {
 			return new org.springframework.security.core.userdetails.User(username, "", true, true, true, false,
 					new ArrayList<GrantedAuthority>());
 		}

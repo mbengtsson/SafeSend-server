@@ -5,4 +5,5 @@ package se.teamgejm.safesendserver.domain.floodevent;
  */
 public enum FloodType {
 	FAILED_VALIDATE_CREDENTIALS,
+	FAILED_WEB_LOGIN;
 }
