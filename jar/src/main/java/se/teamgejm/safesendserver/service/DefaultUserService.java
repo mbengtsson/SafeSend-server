@@ -139,7 +139,11 @@ public class DefaultUserService implements UserService {
 	 */
 	private boolean validateUserData(final User user) {
 
-		final String pubKey = new String(Base64.decodeBase64(user.getPublicKey().getBytes())).trim();
+		final byte[] keyBytes = user.getPublicKey().getBytes();
+		if (!Base64.isArrayByteBase64(keyBytes)) {
+			return false;
+		}
+		final String pubKey = new String(Base64.decodeBase64(keyBytes)).trim();
 
 		return user.getEmail().matches(EMAIL_PATTERN) && user.getDisplayName().matches(DISPLAYNAME_PATTERN) &&
 				user.getPassword().matches(PASSWORD_PATTERN) && pubKey.matches(PUBKEY_PATTERN);

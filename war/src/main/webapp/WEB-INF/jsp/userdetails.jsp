@@ -51,7 +51,7 @@
     <div id="key">
         <h3>Public PGP-Key</h3>
 
-        <p><c:out value="${user.publicKey}"/></p>
+        <pre><c:out value="${user.publicKey}"/></pre>
     </div>
 
     <table class="list">

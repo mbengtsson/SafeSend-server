@@ -1,5 +1,6 @@
 package se.teamgejm.safesendserver.mvc.controller;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,8 +79,16 @@ public class AdminController {
 	public ModelAndView userDetails(@PathVariable final long id) {
 
 		final User user = userService.getUser(id);
-		final UserBean userBean = new UserBean(user.getId(), user.getEmail(), user.getDisplayName(),
-				user.getPublicKey(), user.getRole().toString());
+
+		final String pubKey;
+		if (Base64.isArrayByteBase64(user.getPublicKey().getBytes())) {
+			pubKey = new String(Base64.decodeBase64(user.getPublicKey().getBytes())).trim();
+		} else {
+			pubKey = user.getPublicKey();
+		}
+
+		final UserBean userBean = new UserBean(user.getId(), user.getEmail(), user.getDisplayName(), pubKey,
+				user.getRole().toString());
 		final Role[] roles = Role.values();
 
 		final Set<LogEntry> logEntries = new HashSet<LogEntry>(logService.getLogEntrysByActorID(id));

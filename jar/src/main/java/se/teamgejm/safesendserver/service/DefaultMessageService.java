@@ -62,7 +62,11 @@ public class DefaultMessageService implements MessageService {
 	 */
 	private boolean validateMessageData(final Message message) {
 
-		final String pgpMessage = new String(Base64.decodeBase64(message.getMessage().getBytes())).trim();
+		final byte[] messageBytes = message.getMessage().getBytes();
+		if (!Base64.isArrayByteBase64(messageBytes)) {
+			return false;
+		}
+		final String pgpMessage = new String(Base64.decodeBase64(messageBytes)).trim();
 
 		return pgpMessage.matches(PGPMESSAGE_PATTERN);
 	}
