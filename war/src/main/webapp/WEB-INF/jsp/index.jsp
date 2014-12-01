@@ -28,7 +28,7 @@
     <a href="<%=request.getContextPath()%>/api/">API documentation</a>
     <br>
     <br>
-    <a href="https://drive.google.com/file/d/0Bz9cm7WlxkCcM09MdDQyQldyWUE/view?usp=sharing">Download android-app</a>
+    <a href="https://drive.google.com/file/d/0Bz9cm7WlxkCccFFVWDJ2QzZWVDA/view?usp=sharing">Download android-app</a>
 
 
 </div>

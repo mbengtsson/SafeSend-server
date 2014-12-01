@@ -58,7 +58,7 @@ public class DefaultPasswordHasher implements PasswordHasher {
 	public boolean validatePassword(final String password, final String correctHash) {
 
 		final String[] hashParams = correctHash.split(":");
-		int iterations = Integer.parseInt(hashParams[0]);
+		final int iterations = Integer.parseInt(hashParams[0]);
 		final byte[] salt = fromHex(hashParams[1]);
 		final byte[] hash = fromHex(hashParams[2]);
 
