@@ -1,10 +1,11 @@
 package se.teamgejm.safesendserver.security;
 
+import org.apache.commons.codec.binary.Base64;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -30,7 +31,7 @@ public class DefaultPasswordHasher implements PasswordHasher {
 	 * Returns salted hash of the password
 	 *
 	 * @param password the password to hash
-	 * @return salted hash of the password
+	 * @return base64 encoded salted hash of the password together with salt and iterations (iterations:salt:password)
 	 */
 	@Override
 	public String generateHash(final String password) {
@@ -39,7 +40,8 @@ public class DefaultPasswordHasher implements PasswordHasher {
 			final byte[] salt = getSalt();
 			final byte[] hash = getHash(password, salt, PBKDF2_ITERATIONS, HASH_BITS);
 
-			return String.format("%s:%s:%s", PBKDF2_ITERATIONS, toHex(salt), toHex(hash));
+			return String.format("%s:%s:%s", PBKDF2_ITERATIONS, new String(Base64.encodeBase64(salt)),
+					new String(Base64.encodeBase64(hash)));
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -59,8 +61,8 @@ public class DefaultPasswordHasher implements PasswordHasher {
 
 		final String[] hashParams = correctHash.split(":");
 		final int iterations = Integer.parseInt(hashParams[0]);
-		final byte[] salt = fromHex(hashParams[1]);
-		final byte[] hash = fromHex(hashParams[2]);
+		final byte[] salt = Base64.decodeBase64(hashParams[1].getBytes());
+		final byte[] hash = Base64.decodeBase64(hashParams[2].getBytes());
 
 		try {
 			final byte[] testHash = getHash(password, salt, iterations, hash.length * 8);
@@ -90,28 +92,6 @@ public class DefaultPasswordHasher implements PasswordHasher {
 		random.nextBytes(salt);
 
 		return salt;
-	}
-
-	private String toHex(final byte[] bytes) {
-
-		final BigInteger bigInt = new BigInteger(1, bytes);
-		final String hex = bigInt.toString(16);
-		final int paddingLength = (bytes.length * 2) - hex.length();
-		if (paddingLength > 0) {
-			return String.format("%0" + paddingLength + "d", 0) + hex;
-		} else {
-			return hex;
-		}
-	}
-
-	private byte[] fromHex(final String hex) {
-
-		final byte[] bytes = new byte[hex.length() / 2];
-		for (int i = 0; i < bytes.length; i++) {
-			bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-		}
-
-		return bytes;
 	}
 
 	/**
