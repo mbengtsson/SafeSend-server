@@ -29,7 +29,7 @@
     <a href="<%=request.getContextPath()%>/api/">API documentation</a>
     <br>
     <br>
-    <a href="<%=request.getContextPath()%>/downloads/safesend.apk">Download android-app</a>
+    <a href="https://stjerneman.com/safesend.apk">Download android-app</a>
 
 
 </div>

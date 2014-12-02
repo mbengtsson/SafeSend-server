@@ -31,7 +31,8 @@ public class DefaultPasswordHasher implements PasswordHasher {
 	 * Returns salted hash of the password
 	 *
 	 * @param password the password to hash
-	 * @return base64 encoded salted hash of the password together with salt and iterations (iterations:salt:password)
+	 * @return base64 encoded salted hash of the password together with salt and iterations
+	 * (iterations:salt:passwordhash)
 	 */
 	@Override
 	public String generateHash(final String password) {
