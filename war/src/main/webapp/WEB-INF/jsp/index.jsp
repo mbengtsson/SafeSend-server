@@ -9,6 +9,7 @@
 <%@taglib prefix="sec"
           uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page session="true" %>
 <html>
 <head>
     <title>Safe-send</title>
@@ -28,7 +29,7 @@
     <a href="<%=request.getContextPath()%>/api/">API documentation</a>
     <br>
     <br>
-    <a href="https://drive.google.com/file/d/0Bz9cm7WlxkCccFFVWDJ2QzZWVDA/view?usp=sharing">Download android-app</a>
+    <a href="<%=request.getContextPath()%>/downloads/safesend.apk">Download android-app</a>
 
 
 </div>
